@@ -1,2 +1,2 @@
 # meissen
-Neissen Veranstaltungen
+Meissen Veranstaltungen
