@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEISSEN Veranstaltungskalender</title><style>:root{--bg:#0e0e12;--card:#1a1a22;--b:#262631;--t:#f2f2f5;--m:#8a8a9a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:system-ui, -apple-system, Segoe UI, Roboto} .wrap{max-width:760px;margin:0 auto;padding:14px}h1 small{display:block;font-size:13px;letter-spacing:3px;color:var(--m);text-align:center;margin:22px 0 6px}h1{margin:0;font-size:36px;text-align:center;font-weight:900} .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;justify-content:safe center;scrollbar-width:none}.chips::-webkit-scrollbar{display:none} .chip{flex:0 0 auto;padding:10px 14px;border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;border:1px solid rgba(255,255,255,.08);user-select:none}.chip.on{outline:2px solid #fff;outline-offset:2px} .c-spiele{background:#166534;color:#fff}.c-work{background:#1e4a8a;color:#fff}.c-aus{background:#4c2a7a;color:#fff}.c-markt{background:#d4a017;color:#000}.c-verein{background:#a12a2a;color:#fff}.c-alle{background:#2a2a38;color:#fff} .day{margin:24px 4px 10px;color:var(--m);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700} .event{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:16px;margin:10px 0;display:grid;grid-template-columns:auto 1fr;gap:12px} .badge{padding:5px 10px;border-radius:9px;font-size:11px;font-weight:800;white-space:nowrap} .b-spiele{background:#0f2a1a;color:#3df48d}.b-work{background:#102a4a;color:#6ab0ff}.b-aus{background:#2a1a4a;color:#b88aff}.b-markt{background:#4a3a11;color:#ffde7a}.b-verein{background:#4a1515;color:#ff7a7a} .etitle{font-weight:800;font-size:17px;line-height:1.2} .emeta{font-size:13px;color:#bfbfd0;margin-top:6px;line-height:1.4} .edays{font-size:11px;color:var(--m);margin-top:6px;font-weight:700;letter-spacing:.3px}
+<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEISSEN Kalender</title><style>:root{--bg:#0e0e12;--card:#1a1a22;--b:#262631;--t:#f2f2f5;--m:#8a8a9a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:system-ui, -apple-system, Segoe UI, Roboto} .wrap{max-width:760px;margin:0 auto;padding:14px}h1 small{display:block;font-size:13px;letter-spacing:3px;color:var(--m);text-align:center;margin:22px 0 6px}h1{margin:0;font-size:36px;text-align:center;font-weight:900} .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;justify-content:safe center;scrollbar-width:none}.chips::-webkit-scrollbar{display:none} .chip{flex:0 0 auto;padding:10px 14px;border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;border:1px solid rgba(255,255,255,.08);user-select:none}.chip.on{outline:2px solid #fff;outline-offset:2px} .c-spiele{background:#166534;color:#fff}.c-work{background:#1e4a8a;color:#fff}.c-aus{background:#4c2a7a;color:#fff}.c-markt{background:#d4a017;color:#000}.c-verein{background:#a12a2a;color:#fff}.c-alle{background:#2a2a38;color:#fff} .day{margin:24px 4px 10px;color:var(--m);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700} .event{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:16px;margin:10px 0;display:grid;grid-template-columns:auto 1fr;gap:12px} .badge{padding:5px 10px;border-radius:9px;font-size:11px;font-weight:800;white-space:nowrap} .b-spiele{background:#0f2a1a;color:#3df48d}.b-work{background:#102a4a;color:#6ab0ff}.b-aus{background:#2a1a4a;color:#b88aff}.b-markt{background:#4a3a11;color:#ffde7a}.b-verein{background:#4a1515;color:#ff7a7a} .etitle{font-weight:800;font-size:17px;line-height:1.2} .emeta{font-size:13px;color:#bfbfd0;margin-top:6px;line-height:1.4} .edays{font-size:11px;color:var(--m);margin-top:6px;font-weight:700;letter-spacing:.3px}
 .embed-wrap{max-width:760px;margin:0 auto;padding:14px}
 .embed{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:18px;margin:20px 0 40px}
 .embed h2{margin:0 0 6px;font-size:14px;letter-spacing:1px}
@@ -6,9 +6,21 @@
 .embed .preview{background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .embed textarea{width:100%;background:var(--bg);color:var(--t);border:1px solid var(--b);border-radius:10px;padding:10px;font-family:monospace;font-size:11px;resize:none;box-sizing:border-box}
 .embed label{display:block;font-size:11px;color:var(--m);margin:12px 0 6px;letter-spacing:.5px;text-transform:uppercase;font-weight:700}
+
+/* FIX: PC bleibt wie jetzt (eine Zeile), Handy bricht in 2. Zeile um */
+@media (max-width: 768px){
+  .wrap, .embed-wrap{padding:12px}
+  .chips{
+    flex-wrap: wrap;
+    overflow-x: visible;
+    justify-content: center;
+  }
+  .chip{
+    flex: 0 1 auto;
+  }
+}
 </style></head><body><div class="wrap"><h1><small>MEISSEN</small>Kalender</h1><div class="chips" id="chips"></div><div id="list"></div></div>
 
-<!-- GANZ UNTEN ALS FOOTER -->
 <div class="embed-wrap">
 <div class="embed">
   <h2>📅 DIESEN KALENDER EINBETTEN</h2>
