@@ -1,110 +1,67 @@
-<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEISSEN Kalender</title><style>:root{--bg:#0e0e12;--card:#1a1a22;--b:#262631;--t:#f2f2f5;--m:#8a8a9a}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:system-ui, -apple-system, Segoe UI, Roboto} .wrap{max-width:760px;margin:0 auto;padding:14px}h1 small{display:block;font-size:13px;letter-spacing:3px;color:var(--m);text-align:center;margin:22px 0 6px}h1{margin:0;font-size:36px;text-align:center;font-weight:900} .chips{display:flex;gap:8px;overflow-x:auto;padding:12px 14px;justify-content:safe center;scrollbar-width:none}.chips::-webkit-scrollbar{display:none} .chip{flex:0 0 auto;padding:10px 14px;border-radius:12px;font-weight:700;font-size:13px;cursor:pointer;border:1px solid rgba(255,255,255,.08);user-select:none}.chip.on{outline:2px solid #fff;outline-offset:2px} .c-spiele{background:#166534;color:#fff}.c-work{background:#1e4a8a;color:#fff}.c-aus{background:#4c2a7a;color:#fff}.c-markt{background:#d4a017;color:#000}.c-verein{background:#a12a2a;color:#fff}.c-alle{background:#2a2a38;color:#fff} .day{margin:24px 4px 10px;color:var(--m);font-size:11px;letter-spacing:1px;text-transform:uppercase;font-weight:700} .event{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:16px;margin:10px 0;display:grid;grid-template-columns:auto 1fr;gap:12px} .badge{padding:5px 10px;border-radius:9px;font-size:11px;font-weight:800;white-space:nowrap} .b-spiele{background:#0f2a1a;color:#3df48d}.b-work{background:#102a4a;color:#6ab0ff}.b-aus{background:#2a1a4a;color:#b88aff}.b-markt{background:#4a3a11;color:#ffde7a}.b-verein{background:#4a1515;color:#ff7a7a} .etitle{font-weight:800;font-size:17px;line-height:1.2} .emeta{font-size:13px;color:#bfbfd0;margin-top:6px;line-height:1.4} .edays{font-size:11px;color:var(--m);margin-top:6px;font-weight:700;letter-spacing:.3px}
-.embed-wrap{max-width:760px;margin:0 auto;padding:14px}
-.embed{background:var(--card);border:1px solid var(--b);border-radius:18px;padding:18px;margin:20px 0 40px}
-.embed h2{margin:0 0 6px;font-size:14px;letter-spacing:1px}
-.embed p{margin:0 0 14px;font-size:13px;color:var(--m);line-height:1.4}
-.embed .preview{background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.embed textarea{width:100%;background:var(--bg);color:var(--t);border:1px solid var(--b);border-radius:10px;padding:10px;font-family:monospace;font-size:11px;resize:none;box-sizing:border-box}
-.embed label{display:block;font-size:11px;color:var(--m);margin:12px 0 6px;letter-spacing:.5px;text-transform:uppercase;font-weight:700}
-@media (max-width: 768px){
-  .wrap, .embed-wrap{padding:12px}
-  .chips{
-    flex-wrap: wrap;
-    overflow-x: visible;
-    justify-content: center;
-  }
-  .chip{
-    flex: 0 1 auto;
-  }
-}
-</style></head><body><div class="wrap"><h1><small>MEISSEN</small>Kalender</h1><div class="chips" id="chips"></div><div id="list"></div></div>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meissen Kalender</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#fafaf7}
+header{padding:16px 20px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
+#map{height:420px;width:100%;border-bottom:1px solid #ddd}
+.events{max-width:900px;margin:0 auto;padding:16px}
+.card{background:#fff;border:1px solid #eee;border-radius:12px;padding:14px;margin:12px 0;display:flex;gap:12px}
+.badge{font-size:12px;background:#f0f0f0;padding:3px 8px;border-radius:999px}
+.btn{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:8px;background:#111;color:#fff;text-decoration:none;font-size:14px}
+.btn:hover{background:#333}
+small{color:#666}
+.leaflet-popup-content a{color:#111;text-decoration:underline}
+</style>
+</head>
+<body>
+<header><h1 style="margin:0">Meissen Kalender</h1><small>Liste + Karte · OpenStreetMap</small></header>
+<div id="map"></div>
+<div class="events" id="events"></div>
 
-<div class="embed-wrap">
-<div class="embed">
-  <h2>📅 DIESEN KALENDER EINBETTEN</h2>
-  <p>Füge dieses Badge auf deiner Webseite ein. Besucher kommen direkt hierher:</p>
-  <div class="preview">
-    <a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank">
-      <img src="https://img.shields.io/badge/MEISSEN-Kalender-f2f2f5?style=flat-square&labelColor=1a1a22&color=1a1a22&logoColor=f2f2f5" alt="Meissen Kalender">
-    </a>
-  </div>
-  <label>HTML</label>
-  <textarea readonly rows="3" onclick="this.select()"><a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank">
-  <img src="https://img.shields.io/badge/MEISSEN-Kalender-f2f2f5?style=flat-square&labelColor=1a1a22&color=1a1a22" alt="Meissen Kalender">
-</a></textarea>
-  <label>Markdown</label>
-  <textarea readonly rows="2" onclick="this.select()">[![MEISSEN](https://img.shields.io/badge/MEISSEN-Kalender-f2f2f5?style=flat-square&labelColor=1a1a22&color=1a1a22)](https://mondlicht-und-sterne.github.io/meissen/)</textarea>
-</div>
-</div>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-let cats=[{id:'Alle',label:'Alle',cls:'c-alle'},{id:'Spieleabend',label:'Spieleabend',cls:'c-spiele'},{id:'Workshop',label:'Workshop',cls:'c-work'},{id:'Ausstellung',label:'Ausstellung',cls:'c-aus'},{id:'Markt',label:'Markt',cls:'c-markt'},{id:'Verein',label:'Verein',cls:'c-verein'}];
-let active='Alle';let data=[];
-function renderChips(){document.getElementById('chips').innerHTML=cats.map(c=>`<div class="chip ${c.cls} ${active===c.id?'on':''}" onclick="active='${c.id}';render()">${c.label}</div>`).join('')}
-function fmtDay(d){return new Date(d).toLocaleDateString('de-DE',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).toUpperCase()}
-function fmtRange(a,b){
-  if(!b || a===b) return fmtDay(a);
-  let d1=new Date(a), d2=new Date(b);
-  if(d1.getFullYear()===d2.getFullYear() && d1.getMonth()===d2.getMonth()){
-    return `${d1.getDate()}. BIS ${d2.getDate()}. ${d2.toLocaleDateString('de-DE',{month:'long',year:'numeric'}).toUpperCase()}`;
+async function load(){
+  let data=[];
+  try{
+    const r=await fetch('events.json?t='+Date.now());
+    data=await r.json();
+  }catch(e){ 
+    document.getElementById('events').innerHTML='<p>events.json nicht gefunden oder ungültig - bitte JSON prüfen</p>'; 
+    return;
   }
-  return `${d1.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'})} – ${d2.toLocaleDateString('de-DE',{day:'2-digit',month:'long',year:'numeric'})}`.toUpperCase();
-}
-function bClass(cat){if(cat==='Spieleabend')return 'b-spiele';if(cat==='Workshop')return 'b-work';if(cat==='Ausstellung')return 'b-aus';if(cat==='Markt')return 'b-markt';if(cat==='Verein')return 'b-verein';return '';}
-function isActiveOn(ev, todayStr){
-  let start=ev.date, end=ev.date_end||ev.date;
-  return todayStr>=start && todayStr<=end || todayStr<=end;
-}
-function linkify(t){
-  if(!t) return '';
-  if(t.includes('<a ')) return t;
-  return t.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#6ab0ff;text-decoration:underline">$1</a>');
-}
-function renderDesc(ev){
-  let desc = linkify(ev.desc||'');
-  let linkBtn = '';
-  if(ev.link){
-    let label = ev.link_label || 'Mehr Infos';
-    linkBtn = `<div style="margin-top:10px"><a href="${ev.link}" target="_blank" style="display:inline-block;background:#2a2a38;border:1px solid #333;padding:7px 12px;border-radius:10px;font-size:12px;font-weight:800;color:#fff;text-decoration:none">🔗 ${label}</a></div>`;
-  }
-  return desc + linkBtn;
-}
-function render(){
-  renderChips();
-  let today=new Date().toISOString().slice(0,10);
-  let f=data.filter(e=>isActiveOn(e,today));
-  if(f.length===0) f=data;
-  f=f.filter(e=>active==='Alle'||!e.cat||e.cat===active).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
-  let groups={};
-  f.forEach(ev=>{
-    let key=ev.date;
-    if(!groups[key]) groups[key]=[];
-    groups[key].push(ev);
-  });
-  let html='';
-  Object.keys(groups).sort().forEach(d=>{
-    let hasRange = groups[d].some(ev=>ev.date_end && ev.date_end!==ev.date);
-    if(hasRange){
-      groups[d].forEach(ev=>{
-        html+=`<div class="day">${fmtRange(ev.date, ev.date_end)}</div>`;
-        let badge=ev.cat?`<div><span class="badge ${bClass(ev.cat)}">${ev.cat}</span></div>`:`<div></div>`;
-        let daysInfo = ev.date_end && ev.date_end!==ev.date ? `<div class="edays">${ev.date} → ${ev.date_end}</div>` : '';
-        html+=`<div class="event">${badge}<div><div class="etitle">${ev.title}</div><div class="emeta">${ev.time||''} · <b>${ev.place||''}</b><br>${renderDesc(ev)}</div>${daysInfo}</div></div>`;
-      });
-    } else {
-      html+=`<div class="day">${fmtDay(d)}</div>`;
-      groups[d].forEach(ev=>{
-        let badge=ev.cat?`<div><span class="badge ${bClass(ev.cat)}">${ev.cat}</span></div>`:`<div></div>`;
-        html+=`<div class="event">${badge}<div><div class="etitle">${ev.title}</div><div class="emeta">${ev.time||''} · <b>${ev.place||''}</b><br>${renderDesc(ev)}</div></div></div>`;
-      });
+
+  // Karte OSM
+  const map=L.map('map').setView([51.1628,13.47],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+  const bounds=[];
+
+  const container=document.getElementById('events');
+  data.sort((a,b)=> new Date(a.date)-new Date(b.date));
+  data.forEach(ev=>{
+    if(ev.lat && ev.lon){
+      const m=L.marker([ev.lat,ev.lon]).addTo(map);
+      m.bindPopup(`<b>${ev.title}</b><br>${ev.place}<br><small>${ev.date} ${ev.time||''}</small><br>${ev.link?`<a href="${ev.link}" target="_blank">${ev.link_label||'Link'}</a>`:''}`);
+      bounds.push([ev.lat,ev.lon]);
     }
+    const linkify=t=>(t||'').replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank">$1</a>');
+    container.innerHTML+=`
+      <div class="card">
+        <div style="flex:1">
+          <div><span class="badge">${ev.cat||''}</span> <small>${ev.date}${ev.date_end?' – '+ev.date_end:''} ${ev.time||''}</small></div>
+          <h3 style="margin:6px 0">${ev.title}</h3>
+          <small>${ev.place||''}</small>
+          <p>${linkify(ev.desc||'')}</p>
+          ${ev.link?`<a class="btn" href="${ev.link}" target="_blank" rel="noopener">${ev.link_label||'Mehr Infos'} ↗</a>`:''}
+        </div>
+      </div>`;
   });
-  document.getElementById('list').innerHTML=html||'<div style="text-align:center;color:var(--m);margin-top:40px">Keine Termine</div>';
+  if(bounds.length) map.fitBounds(bounds,{padding:[40,40]});
 }
-let fallback=[
-{date:'2026-11-08',time:'14:00–18:00',cat:'Verein',title:'Eröffnung: GEPARD e.V.',place:'Meißen',desc:'Feierliche Eröffnung',link:'https://gepard-ev.de',link_label:'gepard-ev.de'},
-{date:'2027-05-22',date_end:'2027-05-23',time:'10:00–18:00',cat:'Markt',title:'Meißner Töpfermarkt I',place:'Marktplatz Meißen',desc:'Keramik & Handwerk - 2 Tage',link:'https://www.stadt-meissen.de'},
-{date:'2026-11-20',time:'19:00–22:00',cat:'Spieleabend',title:'Spieleabend',place:'Jugendclub Neugasse 12, Meißen',desc:'Offener Abend - kostenfrei - Infos unter https://gepard-ev.de'}
-];
-fetch('events.json?t='+Date.now()).then(r=>{if(!r.ok) throw 0;return r.json()}).then(j=>{data=j;render()}).catch(()=>{data=fallback;render()});
-</script></body></html>
+load();
+</script>
+</body>
+</html>
