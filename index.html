@@ -10,19 +10,19 @@ body{font-family:system-ui,sans-serif;margin:0;background:var(--bg);color:var(--
 header{padding:20px;background:#11110f;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:9999}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .toolbar button{padding:8px 14px;border-radius:999px;border:1px solid transparent;cursor:pointer;font-weight:800;opacity:.55;transition:.15s}
-.toolbar button.active{opacity:1;box-shadow:0 0 0 2px var(--bg), 0 0 0 4px currentColor}
+.toolbar button.active{opacity:1;box-shadow:0 0 0 2px var(--bg),0 0 0 4px currentColor}
 .cat-verein{background:#60a5fa;color:#111}
 .cat-spieleabend{background:#4ade80;color:#111}
 .cat-markt{background:#facc15;color:#111}
 .cat-alle{background:#f0ece1;color:#111}
 #map{height:260px;max-width:900px;margin:16px auto;border-radius:16px;border:1px solid var(--border);overflow:hidden;position:relative;z-index:1}
-.leaflet-top, .leaflet-bottom{z-index:400 !important}
+.leaflet-top,.leaflet-bottom{z-index:400 !important}
 .events{max-width:900px;margin:0 auto;padding:16px 16px 40px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0;position:relative}
 .badge{position:absolute;top:16px;right:16px;font-size:11px;font-weight:800;text-transform:uppercase;padding:5px 10px;border-radius:999px;color:#111}
-.btn{display:inline-block;margin-top:10px;padding:7px 12px;border-radius:10px;background:var(--text);color:#111;text-decoration:none;font-weight:600}
-small{color:var(--muted)}
-h3{padding-right:90px;margin:8px 0}
+.btn{display:inline-block;margin-top:10px;padding:7px 12px;border-radius:10px;background:var(--text);color:#111;text-decoration:none;font-weight:600;font-size:14px}
+small{color:var(--muted)} h3{padding-right:90px;margin:8px 0}
+a{color:var(--text);word-break:break-all}
 .embed-box{margin-top:40px;padding:16px;background:var(--card);border:1px dashed var(--border);border-radius:12px}
 .embed-box code{display:block;background:#11110f;padding:10px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-all;margin-top:8px;color:#ccc;border:1px solid var(--border)}
 </style>
@@ -40,13 +40,34 @@ h3{padding-right:90px;margin:8px 0}
 </header>
 <div id="map"></div>
 <div class="events" id="events"></div>
-<div class="events"><div class="embed-box"><strong>Badge zum Einbetten</strong><div style="margin:12px 0"><a href="https://mondlicht-und-sterne.github.io/meissen/" style="display:inline-block;padding:6px 12px;background:#f0ece1;color:#111;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a></div><small>HTML:</small><code id="badge-html"></code><small style="margin-top:12px;display:block">Markdown:</small><code id="badge-md"></code></div></div>
+<div class="events"><div class="embed-box"><strong>Badge zum Einbetten</strong><div style="margin:12px 0"><a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank" style="display:inline-block;padding:6px 12px;background:#f0ece1;color:#111;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a></div><small>HTML:</small><code id="badge-html"></code><small style="margin-top:12px;display:block">Markdown:</small><code id="badge-md"></code></div></div>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const catClass=c=>{c=(c||'').toLowerCase();if(c.includes('verein'))return'cat-verein';if(c.includes('spiel'))return'cat-spieleabend';if(c.includes('markt'))return'cat-markt';return'cat-alle';};
 let allData=[],map,markers=[],currentCat='alle';
-async function load(){const r=await fetch('events.json?t='+Date.now());allData=await r.json();map=L.map('map').setView([51.161368,13.4716919],15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);render();document.getElementById('badge-html').textContent=`<a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank" rel="noopener" style="display:inline-block;padding:6px 12px;background:#111;color:#fff;border-radius:999px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a>`;document.getElementById('badge-md').textContent=`[Meissen Kalender](https://mondlicht-und-sterne.github.io/meissen/)`;}
-function render(){const c=document.getElementById('events');c.innerHTML='';markers.forEach(m=>map.removeLayer(m));markers=[];const b=[];let f=allData.filter(ev=>currentCat==='alle'||(ev.cat||'').toLowerCase()===currentCat.toLowerCase()).sort((a,b)=>new Date(a.date)-new Date(b.date));f.forEach(ev=>{if(ev.lat&&ev.lon){const m=L.marker([ev.lat,ev.lon]).addTo(map).bindPopup(`<b>${ev.title}</b><br>${ev.place||''}`);markers.push(m);b.push([ev.lat,ev.lon]);}const cls=catClass(ev.cat);c.innerHTML+=`<div class="card"><span class="badge ${cls}">${ev.cat||''}</span><div><small>${ev.date} ${ev.time||''}</small></div><h3>${ev.title}</h3><small>${ev.place||''}</small><p>${ev.desc||''}</p></div>`;});if(b.length)map.fitBounds(b,{padding:[30,30]});setTimeout(()=>map.invalidateSize(),200);}
+async function load(){
+  const r=await fetch('events.json?t='+Date.now());allData=await r.json();
+  map=L.map('map').setView([51.161368,13.4716919],15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+  render();
+  document.getElementById('badge-html').textContent=`<a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank" rel="noopener" style="display:inline-block;padding:6px 12px;background:#111;color:#fff;border-radius:999px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a>`;
+  document.getElementById('badge-md').textContent=`[Meissen Kalender](https://mondlicht-und-sterne.github.io/meissen/)`;
+}
+function render(){
+  const container=document.getElementById('events');container.innerHTML='';markers.forEach(m=>map.removeLayer(m));markers=[];const bounds=[];
+  const linkify=t=>(t||'').replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
+  let filtered=allData.filter(ev=>currentCat==='alle'||(ev.cat||'').toLowerCase()===currentCat.toLowerCase()).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  filtered.forEach(ev=>{
+    if(ev.lat&&ev.lon){
+      const m=L.marker([ev.lat,ev.lon]).addTo(map);
+      m.bindPopup(`<b>${ev.title}</b><br>${ev.place||''}<br><small>${ev.date} ${ev.time||''}</small>${ev.link?`<br><a href="${ev.link}" target="_blank">${ev.link_label||'Link'}</a>`:''}`);
+      markers.push(m);bounds.push([ev.lat,ev.lon]);
+    }
+    const cls=catClass(ev.cat);
+    container.innerHTML+=`<div class="card"><span class="badge ${cls}">${ev.cat||''}</span><div><small>${ev.date}${ev.date_end?' – '+ev.date_end:''} ${ev.time||''}</small></div><h3>${ev.title}</h3><small>${ev.place||''}</small><p>${linkify(ev.desc||'')}</p>${ev.link?`<a class="btn" href="${ev.link}" target="_blank" rel="noopener">${ev.link_label||'Mehr Infos'} ↗</a>`:''}</div>`;
+  });
+  if(bounds.length)map.fitBounds(bounds,{padding:[30,30]});setTimeout(()=>map.invalidateSize(),200);
+}
 document.getElementById('filters').addEventListener('click',e=>{if(e.target.tagName==='BUTTON'){document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');currentCat=e.target.dataset.cat;render();}});
 load();
 </script>
