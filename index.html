@@ -5,14 +5,15 @@
 <title>Meissen Kalender</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
-:root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;--accent:#f0ece1}
+:root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732}
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:var(--bg);color:var(--text)}
-header{padding:20px;background:#11110f;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+header{padding:20px;background:#11110f;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:9999}
 header h1{margin:0 0 8px 0;color:#fff}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .toolbar button{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-weight:600}
 .toolbar button.active{background:var(--text);color:#111;border-color:var(--text)}
-#map{height:260px;max-width:900px;margin:16px auto;border-radius:16px;border:1px solid var(--border);overflow:hidden}
+#map{height:260px;max-width:900px;margin:16px auto;border-radius:16px;border:1px solid var(--border);overflow:hidden;position:relative;z-index:1}
+.leaflet-top, .leaflet-bottom{z-index:400 !important}
 .events{max-width:900px;margin:0 auto;padding:16px 16px 40px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0;position:relative}
 .badge{position:absolute;top:16px;right:16px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;background:var(--text);color:#111;padding:5px 10px;border-radius:999px}
@@ -68,7 +69,8 @@ async function load(){
 function render(){
   const container=document.getElementById('events');
   container.innerHTML='';
-  markers.forEach(m=>map.removeLayer(m)); markers=[]; const bounds=[];
+  markers.forEach(m=>map.removeLayer(m)); markers=[]; 
+  const bounds=[];
   let filtered=allData.filter(ev=> currentCat==='alle' || (ev.cat||'').toLowerCase()===currentCat.toLowerCase()).sort((a,b)=> new Date(a.date)-new Date(b.date));
   filtered.forEach(ev=>{
     if(ev.lat && ev.lon){
