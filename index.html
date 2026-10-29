@@ -19,6 +19,8 @@ header h1{margin:0 0 8px 0}
 .btn{display:inline-block;margin-top:10px;padding:7px 12px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-size:14px}
 small{color:var(--muted)}
 h3{padding-right:80px}
+.embed-box{margin-top:40px;padding:16px;background:#fff;border:1px dashed #ccc;border-radius:12px}
+.embed-box code{display:block;background:#f6f5f0;padding:10px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-all;margin-top:8px}
 </style>
 </head>
 <body>
@@ -34,7 +36,21 @@ h3{padding-right:80px}
 </header>
 
 <div id="map"></div>
-<div class="events" id="events"></div>
+<div class="events" id="events">
+</div>
+
+<div class="events">
+  <div class="embed-box">
+    <strong>Badge zum Einbetten</strong><br>
+    <small>Andere können diesen Code auf ihrer Webseite einbauen:</small>
+    <div style="margin:12px 0">
+      <a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank" rel="noopener" style="display:inline-block;padding:6px 12px;background:#111;color:#fff;border-radius:999px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a>
+    </div>
+    <code id="badge-code"></code>
+    <small>Markdown:</small>
+    <code>[Meissen Kalender](https://mondlicht-und-sterne.github.io/meissen/)</code>
+  </div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -45,6 +61,7 @@ async function load(){
   map=L.map('map').setView([51.1628,13.47],14);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
   render();
+  document.getElementById('badge-code').textContent = `<a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank" rel="noopener" style="display:inline-block;padding:6px 12px;background:#111;color:#fff;border-radius:999px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a>`;
 }
 function render(){
   const container=document.getElementById('events');
