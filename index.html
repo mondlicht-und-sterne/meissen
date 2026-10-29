@@ -6,8 +6,6 @@
 .embed .preview{background:var(--bg);border:1px solid var(--b);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .embed textarea{width:100%;background:var(--bg);color:var(--t);border:1px solid var(--b);border-radius:10px;padding:10px;font-family:monospace;font-size:11px;resize:none;box-sizing:border-box}
 .embed label{display:block;font-size:11px;color:var(--m);margin:12px 0 6px;letter-spacing:.5px;text-transform:uppercase;font-weight:700}
-
-/* FIX: PC bleibt wie jetzt (eine Zeile), Handy bricht in 2. Zeile um */
 @media (max-width: 768px){
   .wrap, .embed-wrap{padding:12px}
   .chips{
@@ -57,6 +55,20 @@ function isActiveOn(ev, todayStr){
   let start=ev.date, end=ev.date_end||ev.date;
   return todayStr>=start && todayStr<=end || todayStr<=end;
 }
+function linkify(t){
+  if(!t) return '';
+  if(t.includes('<a ')) return t;
+  return t.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#6ab0ff;text-decoration:underline">$1</a>');
+}
+function renderDesc(ev){
+  let desc = linkify(ev.desc||'');
+  let linkBtn = '';
+  if(ev.link){
+    let label = ev.link_label || 'Mehr Infos';
+    linkBtn = `<div style="margin-top:10px"><a href="${ev.link}" target="_blank" style="display:inline-block;background:#2a2a38;border:1px solid #333;padding:7px 12px;border-radius:10px;font-size:12px;font-weight:800;color:#fff;text-decoration:none">🔗 ${label}</a></div>`;
+  }
+  return desc + linkBtn;
+}
 function render(){
   renderChips();
   let today=new Date().toISOString().slice(0,10);
@@ -77,22 +89,22 @@ function render(){
         html+=`<div class="day">${fmtRange(ev.date, ev.date_end)}</div>`;
         let badge=ev.cat?`<div><span class="badge ${bClass(ev.cat)}">${ev.cat}</span></div>`:`<div></div>`;
         let daysInfo = ev.date_end && ev.date_end!==ev.date ? `<div class="edays">${ev.date} → ${ev.date_end}</div>` : '';
-        html+=`<div class="event">${badge}<div><div class="etitle">${ev.title}</div><div class="emeta">${ev.time||''} · <b>${ev.place||''}</b><br>${ev.desc||''}</div>${daysInfo}</div></div>`;
+        html+=`<div class="event">${badge}<div><div class="etitle">${ev.title}</div><div class="emeta">${ev.time||''} · <b>${ev.place||''}</b><br>${renderDesc(ev)}</div>${daysInfo}</div></div>`;
       });
     } else {
       html+=`<div class="day">${fmtDay(d)}</div>`;
       groups[d].forEach(ev=>{
         let badge=ev.cat?`<div><span class="badge ${bClass(ev.cat)}">${ev.cat}</span></div>`:`<div></div>`;
-        html+=`<div class="event">${badge}<div><div class="etitle">${ev.title}</div><div class="emeta">${ev.time||''} · <b>${ev.place||''}</b><br>${ev.desc||''}</div></div></div>`;
+        html+=`<div class="event">${badge}<div><div class="etitle">${ev.title}</div><div class="emeta">${ev.time||''} · <b>${ev.place||''}</b><br>${renderDesc(ev)}</div></div></div>`;
       });
     }
   });
   document.getElementById('list').innerHTML=html||'<div style="text-align:center;color:var(--m);margin-top:40px">Keine Termine</div>';
 }
 let fallback=[
-{date:'2026-11-08',time:'14:00–18:00',cat:'Verein',title:'Eröffnung: GEPARD e.V.',place:'Meißen',desc:'Feierliche Eröffnung - gepard-ev.de'},
-{date:'2027-05-22',date_end:'2027-05-23',time:'10:00–18:00',cat:'Markt',title:'Meißner Töpfermarkt I',place:'Marktplatz Meißen',desc:'Keramik & Handwerk - 2 Tage'},
-{date:'2026-11-20',time:'19:00–22:00',cat:'Spieleabend',title:'Spieleabend',place:'Jugendclub Neugasse 12, Meißen',desc:'Offener Abend - kostenfrei'}
+{date:'2026-11-08',time:'14:00–18:00',cat:'Verein',title:'Eröffnung: GEPARD e.V.',place:'Meißen',desc:'Feierliche Eröffnung',link:'https://gepard-ev.de',link_label:'gepard-ev.de'},
+{date:'2027-05-22',date_end:'2027-05-23',time:'10:00–18:00',cat:'Markt',title:'Meißner Töpfermarkt I',place:'Marktplatz Meißen',desc:'Keramik & Handwerk - 2 Tage',link:'https://www.stadt-meissen.de'},
+{date:'2026-11-20',time:'19:00–22:00',cat:'Spieleabend',title:'Spieleabend',place:'Jugendclub Neugasse 12, Meißen',desc:'Offener Abend - kostenfrei - Infos unter https://gepard-ev.de'}
 ];
 fetch('events.json?t='+Date.now()).then(r=>{if(!r.ok) throw 0;return r.json()}).then(j=>{data=j;render()}).catch(()=>{data=fallback;render()});
 </script></body></html>
