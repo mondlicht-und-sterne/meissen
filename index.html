@@ -10,14 +10,15 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;bac
 header{padding:20px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
 header h1{margin:0 0 8px 0}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.toolbar button{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer}
+.toolbar button{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer;font-weight:600}
 .toolbar button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 #map{height:460px;width:100%;border-bottom:1px solid var(--border)}
 .events{max-width:900px;margin:0 auto;padding:16px 16px 40px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
-.badge{font-size:11px;letter-spacing:.5px;text-transform:uppercase;background:#f0ece1;padding:4px 8px;border-radius:999px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.04);position:relative}
+.badge{position:absolute;top:16px;right:16px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;background:#111;color:#fff;padding:5px 10px;border-radius:999px}
 .btn{display:inline-block;margin-top:10px;padding:7px 12px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-size:14px}
 small{color:var(--muted)}
+h3{padding-right:80px}
 </style>
 </head>
 <body>
@@ -38,55 +39,33 @@ small{color:var(--muted)}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 let allData=[], map, markers=[], currentCat='alle';
-
 async function load(){
-  try{
-    const r=await fetch('events.json?t='+Date.now());
-    allData=await r.json();
-  }catch(e){
-    document.getElementById('events').innerHTML='<p>events.json Fehler</p>'; return;
-  }
+  try{const r=await fetch('events.json?t='+Date.now()); allData=await r.json();}
+  catch(e){document.getElementById('events').innerHTML='<p>events.json Fehler</p>'; return;}
   map=L.map('map').setView([51.1628,13.47],14);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
   render();
 }
-
 function render(){
   const container=document.getElementById('events');
   container.innerHTML='';
-  markers.forEach(m=>map.removeLayer(m));
-  markers=[];
-  const bounds=[];
-
-  let filtered=allData.filter(ev=> currentCat==='alle' || (ev.cat||'').toLowerCase()===currentCat.toLowerCase())
-  .sort((a,b)=> new Date(a.date)-new Date(b.date));
-
+  markers.forEach(m=>map.removeLayer(m)); markers=[]; const bounds=[];
+  let filtered=allData.filter(ev=> currentCat==='alle' || (ev.cat||'').toLowerCase()===currentCat.toLowerCase()).sort((a,b)=> new Date(a.date)-new Date(b.date));
   filtered.forEach(ev=>{
     if(ev.lat && ev.lon){
       const m=L.marker([ev.lat,ev.lon]).addTo(map);
       m.bindPopup(`<b>${ev.title}</b><br>${ev.place||''}<br><small>${ev.date} ${ev.time||''}</small>${ev.link?`<br><a href="${ev.link}" target="_blank">${ev.link_label||'Link'}</a>`:''}`);
-      markers.push(m);
-      bounds.push([ev.lat,ev.lon]);
+      markers.push(m); bounds.push([ev.lat,ev.lon]);
     }
     const linkify=t=>(t||'').replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank">$1</a>');
-    container.innerHTML+=`
-      <div class="card">
-        <div><span class="badge">${ev.cat||''}</span> <small>${ev.date}${ev.date_end?' – '+ev.date_end:''} ${ev.time||''}</small></div>
-        <h3 style="margin:8px 0">${ev.title}</h3>
-        <small>${ev.place||''}</small>
-        <p>${linkify(ev.desc||'')}</p>
-        ${ev.link?`<a class="btn" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos'} ↗</a>`:''}
-      </div>`;
+    container.innerHTML+=`<div class="card"><span class="badge">${ev.cat||''}</span><div><small>${ev.date}${ev.date_end?' – '+ev.date_end:''} ${ev.time||''}</small></div><h3 style="margin:8px 0">${ev.title}</h3><small>${ev.place||''}</small><p>${linkify(ev.desc||'')}</p>${ev.link?`<a class="btn" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos'} ↗</a>`:''}</div>`;
   });
   if(bounds.length) map.fitBounds(bounds,{padding:[40,40]});
 }
-
 document.getElementById('filters').addEventListener('click',e=>{
   if(e.target.tagName==='BUTTON'){
     document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active'));
-    e.target.classList.add('active');
-    currentCat=e.target.dataset.cat;
-    render();
+    e.target.classList.add('active'); currentCat=e.target.dataset.cat; render();
   }
 });
 load();
