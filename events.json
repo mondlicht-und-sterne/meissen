@@ -15,7 +15,9 @@
     "cat": "Spieleabend",
     "title": "Karten auf den Tisch",
     "place": "Kaffeeklappe, Burgstraße 30, 01662 Meissen",
-    "desc": "Poker, Skat oder Rommé · Eintritt frei · Spiele sind da"
+    "desc": "Poker, Skat oder Rommé · Eintritt frei · Spiele sind da",
+    "link": "https://meissen-kaffeeklappe.de",
+    "link_label": "Kaffeeklappe"
   },
   {
     "date": "2026-11-04",
