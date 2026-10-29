@@ -5,62 +5,90 @@
 <title>Meissen Kalender</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <style>
-body{font-family:system-ui,sans-serif;margin:0;background:#fafaf7}
-header{padding:16px 20px;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
-#map{height:420px;width:100%;border-bottom:1px solid #ddd}
-.events{max-width:900px;margin:0 auto;padding:16px}
-.card{background:#fff;border:1px solid #eee;border-radius:12px;padding:14px;margin:12px 0;display:flex;gap:12px}
-.badge{font-size:12px;background:#f0f0f0;padding:3px 8px;border-radius:999px}
-.btn{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:8px;background:#111;color:#fff;text-decoration:none;font-size:14px}
-.btn:hover{background:#333}
-small{color:#666}
-.leaflet-popup-content a{color:#111;text-decoration:underline}
+:root{--bg:#f6f5f0;--card:#fff;--text:#1a1a1a;--muted:#6b6b6b;--border:#e9e6de;--accent:#111}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0;background:var(--bg);color:var(--text)}
+header{padding:20px;background:var(--card);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+header h1{margin:0 0 8px 0}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.toolbar button{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:#fff;cursor:pointer}
+.toolbar button.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+#map{height:460px;width:100%;border-bottom:1px solid var(--border)}
+.events{max-width:900px;margin:0 auto;padding:16px 16px 40px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.badge{font-size:11px;letter-spacing:.5px;text-transform:uppercase;background:#f0ece1;padding:4px 8px;border-radius:999px}
+.btn{display:inline-block;margin-top:10px;padding:7px 12px;border-radius:10px;background:var(--accent);color:#fff;text-decoration:none;font-size:14px}
+small{color:var(--muted)}
 </style>
 </head>
 <body>
-<header><h1 style="margin:0">Meissen Kalender</h1><small>Liste + Karte · OpenStreetMap</small></header>
+<header>
+  <h1>Meissen Kalender</h1>
+  <small>Veranstaltungen in Meißen – mit Karte</small>
+  <div class="toolbar" id="filters">
+    <button data-cat="alle" class="active">Alle</button>
+    <button data-cat="Verein">Verein</button>
+    <button data-cat="Spieleabend">Spieleabend</button>
+    <button data-cat="Markt">Markt</button>
+  </div>
+</header>
+
 <div id="map"></div>
 <div class="events" id="events"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+let allData=[], map, markers=[], currentCat='alle';
+
 async function load(){
-  let data=[];
   try{
     const r=await fetch('events.json?t='+Date.now());
-    data=await r.json();
-  }catch(e){ 
-    document.getElementById('events').innerHTML='<p>events.json nicht gefunden oder ungültig - bitte JSON prüfen</p>'; 
-    return;
+    allData=await r.json();
+  }catch(e){
+    document.getElementById('events').innerHTML='<p>events.json Fehler</p>'; return;
   }
-
-  // Karte OSM
-  const map=L.map('map').setView([51.1628,13.47],14);
+  map=L.map('map').setView([51.1628,13.47],14);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+  render();
+}
+
+function render(){
+  const container=document.getElementById('events');
+  container.innerHTML='';
+  markers.forEach(m=>map.removeLayer(m));
+  markers=[];
   const bounds=[];
 
-  const container=document.getElementById('events');
-  data.sort((a,b)=> new Date(a.date)-new Date(b.date));
-  data.forEach(ev=>{
+  let filtered=allData.filter(ev=> currentCat==='alle' || (ev.cat||'').toLowerCase()===currentCat.toLowerCase())
+  .sort((a,b)=> new Date(a.date)-new Date(b.date));
+
+  filtered.forEach(ev=>{
     if(ev.lat && ev.lon){
       const m=L.marker([ev.lat,ev.lon]).addTo(map);
-      m.bindPopup(`<b>${ev.title}</b><br>${ev.place}<br><small>${ev.date} ${ev.time||''}</small><br>${ev.link?`<a href="${ev.link}" target="_blank">${ev.link_label||'Link'}</a>`:''}`);
+      m.bindPopup(`<b>${ev.title}</b><br>${ev.place||''}<br><small>${ev.date} ${ev.time||''}</small>${ev.link?`<br><a href="${ev.link}" target="_blank">${ev.link_label||'Link'}</a>`:''}`);
+      markers.push(m);
       bounds.push([ev.lat,ev.lon]);
     }
     const linkify=t=>(t||'').replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank">$1</a>');
     container.innerHTML+=`
       <div class="card">
-        <div style="flex:1">
-          <div><span class="badge">${ev.cat||''}</span> <small>${ev.date}${ev.date_end?' – '+ev.date_end:''} ${ev.time||''}</small></div>
-          <h3 style="margin:6px 0">${ev.title}</h3>
-          <small>${ev.place||''}</small>
-          <p>${linkify(ev.desc||'')}</p>
-          ${ev.link?`<a class="btn" href="${ev.link}" target="_blank" rel="noopener">${ev.link_label||'Mehr Infos'} ↗</a>`:''}
-        </div>
+        <div><span class="badge">${ev.cat||''}</span> <small>${ev.date}${ev.date_end?' – '+ev.date_end:''} ${ev.time||''}</small></div>
+        <h3 style="margin:8px 0">${ev.title}</h3>
+        <small>${ev.place||''}</small>
+        <p>${linkify(ev.desc||'')}</p>
+        ${ev.link?`<a class="btn" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos'} ↗</a>`:''}
       </div>`;
   });
   if(bounds.length) map.fitBounds(bounds,{padding:[40,40]});
 }
+
+document.getElementById('filters').addEventListener('click',e=>{
+  if(e.target.tagName==='BUTTON'){
+    document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active'));
+    e.target.classList.add('active');
+    currentCat=e.target.dataset.cat;
+    render();
+  }
+});
 load();
 </script>
 </body>
