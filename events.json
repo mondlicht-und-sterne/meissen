@@ -1,13 +1,5 @@
 [
-  {
-    "date": "2026-10-27",
-    "time": "14:00–18:00",
-    "cat": "Spieleabend",
-    "title": "Karten auf den Tisch",
-    "place": "Kaffeeklappe, Burgstraße 30, 01662 Meissen",
-    "desc": "Poker, Skat oder Rommé · Eintritt frei · Spiele sind da"
-  },
-  {
+ {
     "date": "2026-10-28",
     "time": "17:30–21:00",
     "cat": "Verein",
@@ -16,6 +8,14 @@
     "desc": "Eröffnungsfeier Begegnungsort Dritter Ort Meißen, um vorherige Anmeldung wird gebeten",
     "link": "https://gepard-ev.de",
     "link_label": "gepard-ev.de"
+  },
+  {
+    "date": "2026-11-03",
+    "time": "16:00–18:00",
+    "cat": "Spieleabend",
+    "title": "Karten auf den Tisch",
+    "place": "Kaffeeklappe, Burgstraße 30, 01662 Meissen",
+    "desc": "Poker, Skat oder Rommé · Eintritt frei · Spiele sind da"
   },
   {
     "date": "2026-11-04",
