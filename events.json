@@ -7,7 +7,9 @@
     "place": "GEPARD e.V., Neugasse 5, 01662 Meissen",
     "desc": "Eröffnungsfeier Begegnungsort Dritter Ort Meißen, um vorherige Anmeldung wird gebeten",
     "link": "https://gepard-ev.de",
-    "link_label": "gepard-ev.de"
+    "link_label": "gepard-ev.de",
+    "lat": 51.1625,
+    "lon": 13.473
   },
   {
     "date": "2026-11-03",
@@ -17,7 +19,9 @@
     "place": "Kaffeeklappe, Burgstraße 30, 01662 Meissen",
     "desc": "Poker, Skat oder Rommé · Eintritt frei · Spiele sind da",
     "link": "https://meissen-kaffeeklappe.de",
-    "link_label": "Kaffeeklappe"
+    "link_label": "Kaffeeklappe",
+    "lat": 51.1629,
+    "lon": 13.4698
   },
   {
     "date": "2026-11-04",
@@ -27,7 +31,9 @@
     "place": "GEPARD e.V., Neugasse 5, 01662 Meissen",
     "desc": "Ein Filmabend über die Zukunft und über Entscheidungen, die wir heute treffen. Bring deine Fragen und Ideen mit. Everything will change - Film & Gespräch",
     "link": "https://gepard-ev.de",
-    "link_label": "gepard-ev.de"
+    "link_label": "gepard-ev.de",
+    "lat": 51.1625,
+    "lon": 13.473
   },
   {
     "date": "2027-05-22",
@@ -36,6 +42,8 @@
     "cat": "Markt",
     "title": "Töpfermarkt",
     "place": "Markt · Elbstraße · Heinrichsplatz · Kleinmarkt",
-    "desc": "Keramik"
+    "desc": "Keramik",
+    "lat": 51.1628,
+    "lon": 13.47
   }
 ]
