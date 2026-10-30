@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mondlicht & Sterne - Kalender Meißen</title>
+<title>Meissen Kalender</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -23,10 +23,8 @@ a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;te
 #filters button[data-cat="Spieleabend"]{color:var(--c-spiele)} #filters button[data-cat="Spieleabend"].active{background:var(--c-spiele)}
 #filters button[data-cat="Markt"]{color:var(--c-markt)} #filters button[data-cat="Markt"].active{background:var(--c-markt);color:#111}
 #filters button[data-cat="Andere"]{color:var(--c-andere)} #filters button[data-cat="Andere"].active{background:var(--c-andere)}
-
 #mapWrap{max-width:1000px;margin:0 auto 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
-#map{height:360px;width:100%;background:#111}
-
+#map{height:380px;width:100%;background:#111}
 #calendar{max-width:1000px;margin:0 auto;display:grid;gap:12px}
 .day{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
 .dayHeader{display:flex;justify-content:space-between;margin-bottom:10px}
@@ -36,28 +34,26 @@ a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;te
 .event.cat-Spieleabend{border-left-color:var(--c-spiele);background:#a78bfa18}
 .event.cat-Markt{border-left-color:var(--c-markt);background:#fbbf2418}
 .event.cat-Andere{border-left-color:var(--c-andere);background:#34d39918}
-.eventTitle{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.eventTitle{font-weight:800;font-size:14px;display:flex;align-items:centkomplette index.htmler;gap:6px;flex-wrap:wrap}
 .badge{font-size:10px;padding:3px 8px;border-radius:999px;font-weight:800}
 .badge.verein{background:var(--c-verein);color:#111} .badge.spiele{background:var(--c-spiele);color:#111}
 .badge.markt{background:var(--c-markt);color:#111} .badge.andere{background:var(--c-andere);color:#111}
 .badge.multiBadge{background:var(--text);color:#111}
 .eventMeta{font-size:12px;color:var(--muted);margin-top:2px}
 a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:600}
-
 #forOthers{max-width:1000px;margin:28px auto 0;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
 #forOthers h2{margin:0 0 8px;font-size:18px}
-#forOthers textarea{width:100%;background:#11110f;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;font-family:monospace;min-height:88px}
+#forOthers p{color:var(--muted);font-size:13px;margin:0 0 12px}
+#forOthers textarea{width:100%;background:#11110f;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;font-family:monospace;min-height:100px}
 #forOthers .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:700px){#forOthers .row{grid-template-columns:1fr} #map{height:300px}}
-.leaflet-popup-content{font-family:system-ui;font-size:13px}
 </style>
 </head>
 <body>
 <header>
-  <div><h1>Meißen Kalender</h1><div class="sub">Mondlicht & Sterne</div></div>
+  <div><h1>Meissen Kalender</h1><div class="sub">mondstern</div></div>
   <a class="btn" href="formular.html">+ Event vorschlagen</a>
 </header>
-
 <div id="filters">
   <button data-cat="all" class="active">Alle</button>
   <button data-cat="Verein">Verein</button>
@@ -65,15 +61,14 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
   <button data-cat="Markt">Markt</button>
   <button data-cat="Andere">Andere</button>
 </div>
-
 <div id="mapWrap"><div id="map"></div></div>
-<div id="calendar">Lade...</div>
+<div id="calendar">Lade events.json...</div>
 
 <div id="forOthers">
-  <h2>Meißen Kalender für Andere Webseiten</h2>
-  <p style="color:var(--muted);font-size:13px">Mitnehmen für deine Seite:</p>
+  <h2>Meissen Kalender Badge für Deine Webseite</h2>
+  
   <div class="row">
-    <label style="font-size:11px;color:var(--muted);font-weight:800">HTML iFrame
+    <label style="font-size:11px;color:var(--muted);font-weight:800">HTML
       <textarea id="htmlCode" readonly></textarea>
     </label>
     <label style="font-size:11px;color:var(--muted);font-weight:800">Markdown
@@ -84,22 +79,14 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 
 <script>
 let allEvents=[]; let activeCat='all'; let map; let markers=[];
-
-function isOnDay(ev, dayStr){
-  const start=ev.startDate||ev.date; const end=ev.endDate||ev.dateTo||ev.date;
-  if(!start) return false; return dayStr>=start && dayStr<=end;
-}
+function isOnDay(ev, dayStr){ const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date; if(!s) return false; return dayStr>=s && dayStr<=e; }
 function formatLabel(ev){ const end=ev.endDate||ev.dateTo; if(end&&end!==ev.date) return `${ev.date} → ${end}`; return ev.date; }
 function isMulti(ev){ const end=ev.endDate||ev.dateTo; return end&&end!==ev.date; }
 const catClass=c=>{ if(c==='Verein')return'Verein'; if(c==='Spieleabend')return'Spieleabend'; if(c==='Markt')return'Markt'; return'Andere'; };
 const badgeClass=c=>{ if(c==='Verein')return'verein'; if(c==='Spieleabend')return'spiele'; if(c==='Markt')return'markt'; return'andere'; };
 const catColor=c=>{ if(c==='Verein')return'#60a5fa'; if(c==='Spieleabend')return'#a78bfa'; if(c==='Markt')return'#fbbf24'; return'#34d399'; };
 
-function initMap(){
-  map=L.map('map').setView([51.163,51.163,51.163].length? [51.163,13.47] : [51.163,13.47],13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);
-}
-
+function initMap(){ map=L.map('map').setView([51.163,13.47],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }
 function updateMap(){
   markers.forEach(m=>map.removeLayer(m)); markers=[];
   const filtered=allEvents.filter(e=>activeCat==='all'||e.cat===activeCat).filter(e=>e.lat&&e.lon);
@@ -110,24 +97,17 @@ function updateMap(){
   });
   if(markers.length){ const g=L.featureGroup(markers); map.fitBounds(g.getBounds().pad(0.3)); }
 }
-
 async function load(){
   initMap();
   try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt'; return; }
   render();
 }
-
 function render(){
   const cal=document.getElementById('calendar'); cal.innerHTML='';
   const daysSet=new Set();
-  allEvents.forEach(ev=>{
-    const start=ev.startDate||ev.date; const end=ev.endDate||ev.dateTo||ev.date; if(!start) return;
-    let d=new Date(start); const endD=new Date(end);
-    for(; d<=endD; d.setDate(d.getDate()+1)){ daysSet.add(d.toISOString().slice(0,10)); if(daysSet.size>120) break; }
-  });
+  allEvents.forEach(ev=>{ const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date; if(!s) return; let d=new Date(s); const endD=new Date(e); for(; d<=endD; d.setDate(d.getDate()+1)){ daysSet.add(d.toISOString().slice(0,10)); if(daysSet.size>120) break; } });
   const days=[...daysSet].sort();
   const filteredForEmbed=[];
-
   days.forEach(dayStr=>{
     const evs=allEvents.filter(e=>(activeCat==='all'||e.cat===activeCat) && isOnDay(e,dayStr));
     if(!evs.length) return;
@@ -144,12 +124,21 @@ function render(){
     });
     cal.appendChild(dayDiv);
   });
-
   updateMap();
-  const baseUrl=location.href.replace(/index\.html.*$/,'');
-  document.getElementById('htmlCode').value=`<iframe src="${baseUrl}" width="100%" height="600" style="border:0;border-radius:16px" loading="lazy"></iframe>`;
-  const mdList=filteredForEmbed.slice(0,20).map(ev=>`- **${ev._day}** ${ev.title} _${ev.cat||''}_ ${ev.link?`[${ev.link_label||'Link'}](${ev.link})`:''}`).join('\n')||'- Keine Events';
-  document.getElementById('mdCode').value=`### Meißen Kalender (${activeCat})\n${mdList}\n\nQuelle: ${baseUrl}`;
+
+  // KORREKTE LINKS - wie vorher
+  const baseUrl = "https://mondlicht-und-sterne.github.io/meissen/";
+  const currentUrl = activeCat !== 'all' ? `${baseUrl}?cat=${activeCat}` : baseUrl;
+
+  const htmlEmbed = `<!-- Meißen Kalender einbetten -->\n<iframe src="${currentUrl}" width="100%" height="600" style="border:0;border-radius:16px;overflow:hidden" loading="lazy" title="Meißen Kalender"></iframe>\n<p style="font-size:12px"><a href="${baseUrl}" target="_blank">Meißen Kalender - Mondlicht & Sterne</a></p>`;
+  document.getElementById('htmlCode').value = htmlEmbed;
+
+  const mdList = filteredForEmbed.slice(0,20).map(ev=>{
+    const when = isMulti(ev) ? `${ev._day} (${formatLabel(ev)})` : ev._day;
+    const linkPart = ev.link ? ` [${ev.link_label||'Link'}](${ev.link})` : '';
+    return `- **${when} - ${ev.title}** _${ev.cat||''}_${linkPart} [📅](${currentUrl})`;
+  }).join('\n') || '- Keine Events';
+  document.getElementById('mdCode').value = `### Meißen Kalender ${activeCat!=='all'?'('+activeCat+')':''}\n\n${mdList}\n\n---\nQuelle: ${baseUrl}\nEmbed: ${currentUrl}`;
 }
 
 document.querySelectorAll('#filters button').forEach(b=>{
