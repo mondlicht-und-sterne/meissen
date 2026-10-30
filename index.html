@@ -2,17 +2,17 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mondlicht & Sterne - Kalender Meißen</title>
+<title>Meissen Kalender</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;--c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-andere:#34d399}
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px 16px 50px}
-header{max-width:1000px;margin:0 auto 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+header{max-width:900px;margin:0 auto 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 h1{margin:0;font-size:24px} .sub{color:var(--muted);font-size:13px;margin-top:4px}
 a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;text-decoration:none;font-weight:900;font-size:13px}
-#filters{max-width:1000px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap}
+#filters{max-width:900px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap}
 #filters button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:13px;font-weight:700}
 #filters button.active{color:#111}
 #filters button[data-cat="all"].active{background:var(--text);border-color:var(--text)}
@@ -20,9 +20,10 @@ a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;te
 #filters button[data-cat="Spieleabend"]{color:var(--c-spiele)} #filters button[data-cat="Spieleabend"].active{background:var(--c-spiele)}
 #filters button[data-cat="Markt"]{color:var(--c-markt)} #filters button[data-cat="Markt"].active{background:var(--c-markt);color:#111}
 #filters button[data-cat="Andere"]{color:var(--c-andere)} #filters button[data-cat="Andere"].active{background:var(--c-andere)}
-#mapWrap{max-width:1000px;margin:0 auto 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
-#map{height:380px;width:100%}
-#calendar{max-width:1000px;margin:0 auto;display:grid;gap:12px}
+#mapWrap{max-width:900px;width:92%;margin:0 auto 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+#map{height:280px;width:100%}
+@media(min-width:1000px){ #mapWrap{width:100%} #map{height:320px} }
+#calendar{max-width:900px;margin:0 auto;display:grid;gap:12px}
 .day{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
 .dayHeader{display:flex;justify-content:space-between;margin-bottom:10px}
 .dayDate{font-weight:900} .dayWeekday{color:var(--muted);font-size:12px}
@@ -38,7 +39,8 @@ a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;te
 .badge.multiBadge{background:var(--text);color:#111}
 .eventMeta{font-size:12px;color:var(--muted);margin-top:2px}
 a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:600}
-#forOthers{max-width:1000px;margin:28px auto 0;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
+#forOthers{max-width:900px;width:92%;margin:28px auto 0;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
+@media(min-width:1000px){ #forOthers{width:100%} }
 #forOthers h2{margin:0 0 4px;font-size:18px} #forOthers p{color:var(--muted);font-size:13px;margin:0 0 16px}
 #forOthers label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px;display:grid;gap:6px;margin-top:14px}
 #forOthers textarea{width:100%;background:#11110f;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;font-family:monospace;min-height:90px}
@@ -47,7 +49,7 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 </head>
 <body>
 <header>
-  <div><h1>Meißen Kalender</h1><div class="sub">Mondlicht & Sterne</div></div>
+  <div><h1>Meissen Kalender</h1><div class="sub">von mondstern</div></div>
   <a class="btn" href="formular.html">+ Event vorschlagen</a>
 </header>
 <div id="filters">
@@ -61,22 +63,18 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 <div id="calendar">Lade events.json...</div>
 
 <div id="forOthers">
-  <h2>Meißen Kalender für Andere Webseiten</h2>
-  <p>So war es vorher: Shields.io Button + HTML Link + Markdown Link</p>
-  
-  <label>Vorschau Badge
+  <h2>Meissen Kalender für Deihe Webseite</h2>
+  <p>Shields.io Badge + HTML + Markdown - feste URL, kein iFrame</p>
+  <label>Vorschau
     <div class="previewBox" id="badgePreview"></div>
   </label>
-
-  <label>1. Shields.io Button (Badge URL)
+  <label>1. Shields.io Badge URL
     <textarea id="shieldsCode" readonly></textarea>
   </label>
-
-  <label>2. HTML Link (richtiger Link für deine Webseite)
+  <label>2. HTML Link (richtig)
     <textarea id="htmlCode" readonly></textarea>
   </label>
-
-  <label>3. Markdown Link (für GitHub, Notion, Discord)
+  <label>3. Markdown Link (richtig)
     <textarea id="mdCode" readonly></textarea>
   </label>
 </div>
@@ -121,22 +119,14 @@ function render(){
     cal.appendChild(dayDiv);
   });
   updateMap();
-
   const baseUrl = "https://mondlicht-und-sterne.github.io/meissen/";
   const currentUrl = activeCat !== 'all' ? `${baseUrl}?cat=${activeCat}` : baseUrl;
   const label = activeCat !== 'all' ? `Meißen Kalender - ${activeCat}` : `Meißen Kalender`;
   const count = allEvents.filter(e=>activeCat==='all'||e.cat===activeCat).length;
-
-  // 1. SHIELDS.IO BADGE - richtig
   const badgeUrl = `https://img.shields.io/badge/${encodeURIComponent(label)}-${count}%20Events-2ea44f?style=for-the-badge&logo=calendar&logoColor=white`;
   const shieldsMarkdown = `[![${label}](${badgeUrl})](${currentUrl})`;
-  
-  // 2. HTML LINK - richtiger
-  const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${label}">\n</a>\n<!-- oder als Text-Link: -->\n<a href="${currentUrl}" target="_blank">${label} - ${count} Events in Meißen</a>`;
-
-  // 3. MARKDOWN LINK - richtiger
-  const mdLink = `[${label} - ${count} Events in Meißen](${currentUrl})\n\n${shieldsMarkdown}`;
-
+  const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${label}">\n</a>`;
+  const mdLink = `[${label} - ${count} Events](${currentUrl})\n\n${shieldsMarkdown}`;
   document.getElementById('badgePreview').innerHTML = `<a href="${currentUrl}" target="_blank"><img src="${badgeUrl}" alt="${label}"></a>`;
   document.getElementById('shieldsCode').value = badgeUrl;
   document.getElementById('htmlCode').value = htmlLink;
