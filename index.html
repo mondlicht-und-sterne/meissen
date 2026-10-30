@@ -2,98 +2,135 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meissen Kalender</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<title>Mondlicht & Sterne - Kalender Meißen</title>
 <style>
-:root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732}
-body{font-family:system-ui,sans-serif;margin:0;background:var(--bg);color:var(--text)}
-header{padding:20px;background:#11110f;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:9999}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.toolbar button{padding:8px 14px;border-radius:999px;border:1px solid transparent;cursor:pointer;font-weight:800;opacity:.55;transition:.15s}
-.toolbar button.active{opacity:1;box-shadow:0 0 0 2px var(--bg),0 0 0 4px currentColor}
-.cat-verein{background:#60a5fa;color:#111}
-.cat-spieleabend{background:#4ade80;color:#111}
-.cat-markt{background:#facc15;color:#111}
-.cat-alle{background:#f0ece1;color:#111}
-#map{height:260px;max-width:900px;margin:16px auto;border-radius:16px;border:1px solid var(--border);overflow:hidden;position:relative;z-index:1}
-.leaflet-top,.leaflet-bottom{z-index:400 !important}
-.events{max-width:900px;margin:0 auto;padding:16px 16px 40px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin:14px 0;position:relative}
-.badge{position:absolute;top:16px;right:16px;font-size:11px;font-weight:800;text-transform:uppercase;padding:5px 10px;border-radius:999px;color:#111}
-.btn{display:inline-block;margin-top:10px;padding:7px 12px;border-radius:10px;background:var(--text);color:#111;text-decoration:none;font-weight:600;font-size:14px}
-small{color:var(--muted)} h3{padding-right:90px;margin:8px 0}
-a{color:var(--text);word-break:break-all}
-.embed-box{margin-top:40px;padding:16px;background:var(--card);border:1px dashed var(--border);border-radius:12px}
-.embed-box code{display:block;background:#11110f;padding:10px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-break:break-all;margin-top:8px;color:#ccc;border:1px solid var(--border)}
-
-/* NEU: Event vorschlagen Button */
-.add-event-fab{
-  display:inline-flex;align-items:center;gap:8px;
-  background:#f0ece1;color:#11110f;
-  padding:10px 18px;border-radius:999px;
-  font-weight:800;font-size:14px;letter-spacing:.2px;
-  text-decoration:none;
-  position:fixed;top:20px;right:20px;z-index:10000;
-  box-shadow:0 8px 30px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.1) inset;
-  transition:transform .15s,box-shadow .15s;
-}
-.add-event-fab:hover{transform:translateY(-1px) scale(1.03);box-shadow:0 12px 35px rgba(0,0,0,.6)}
-.add-event-fab:active{transform:scale(.97)}
-@media(max-width:700px){
-  .add-event-fab{
-    top:auto;bottom:20px;right:50%;
-    transform:translateX(50%);
-    padding:12px 22px;font-size:15px;
-    box-shadow:0 8px 30px rgba(0,0,0,.6);
-  }
-  .add-event-fab:hover{transform:translateX(50%) scale(1.03)}
-}
+:root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;--green:#4ade80}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px}
+header{max-width:900px;margin:0 auto 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:22px}
+a.btn{padding:8px 14px;border-radius:999px;background:var(--text);color:#111;text-decoration:none;font-weight:800;font-size:13px}
+#filters{max-width:900px;margin:0 auto 16px;display:flex;gap:8px;flex-wrap:wrap}
+#filters button{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:13px}
+#filters button.active{background:var(--text);color:#111;border-color:var(--text)}
+#calendar{max-width:900px;margin:0 auto;display:grid;gap:12px}
+.day{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+.dayHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dayDate{font-weight:900}
+.dayWeekday{color:var(--muted);font-size:12px}
+.event{border-left:3px solid var(--border);padding:8px 10px;margin:8px 0;background:#11110f;border-radius:8px}
+.event.multi{border-left-color:var(--green)}
+.eventTitle{font-weight:800;font-size:14px}
+.eventMeta{font-size:12px;color:var(--muted);margin-top:2px}
+.eventDesc{font-size:13px;margin-top:6px;line-height:1.4}
+.badge{font-size:10px;padding:2px 6px;border-radius:999px;background:var(--border);color:var(--muted);margin-left:6px}
+.badge.multiBadge{background:var(--green);color:#111}
+a.link{color:var(--green);text-decoration:none;font-size:12px}
 </style>
 </head>
 <body>
-<a href="formular.html" class="add-event-fab">＋ Event vorschlagen</a>
-
 <header>
-  <h1>Meissen Kalender</h1>
-  <small>Veranstaltungen in Meißen</small>
-  <div class="toolbar" id="filters">
-    <button data-cat="alle" class="active cat-alle">Alle</button>
-    <button data-cat="Verein" class="cat-verein">Verein</button>
-    <button data-cat="Spieleabend" class="cat-spieleabend">Spieleabend</button>
-    <button data-cat="Markt" class="cat-markt">Markt</button>
-  </div>
+  <h1>Meißen Kalender</h1>
+  <a class="btn" href="formular.html">+ Event vorschlagen</a>
 </header>
-<div id="map"></div>
-<div class="events" id="events"></div>
-<div class="events"><div class="embed-box"><strong>Badge zum Einbetten</strong><div style="margin:12px 0"><a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank" style="display:inline-block;padding:6px 12px;background:#f0ece1;color:#111;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a></div><small>HTML:</small><code id="badge-html"></code><small style="margin-top:12px;display:block">Markdown:</small><code id="badge-md"></code></div></div>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<div id="filters">
+  <button data-cat="all" class="active">Alle</button>
+  <button data-cat="Verein">Verein</button>
+  <button data-cat="Spieleabend">Spieleabend</button>
+  <button data-cat="Markt">Markt</button>
+</div>
+<div id="calendar">Lade events.json...</div>
+
 <script>
-const catClass=c=>{c=(c||'').toLowerCase();if(c.includes('verein'))return'cat-verein';if(c.includes('spiel'))return'cat-spieleabend';if(c.includes('markt'))return'cat-markt';return'cat-alle';};
-let allData=[],map,markers=[],currentCat='alle';
+let allEvents=[];
+let activeCat='all';
+
+function parseDate(str){ return str; } // YYYY-MM-DD bleibt vergleichbar
+
+function isOnDay(ev, dayStr){
+  if(!ev.date) return false;
+  const start = ev.startDate || ev.date;
+  const end = ev.endDate || ev.dateTo || ev.date;
+  return dayStr >= start && dayStr <= end;
+}
+function formatLabel(ev){
+  if((ev.dateTo && ev.dateTo!==ev.date) || (ev.endDate && ev.endDate!==ev.date)){
+    const end = ev.endDate || ev.dateTo;
+    return `${ev.date} → ${end}`;
+  }
+  return ev.date;
+}
+function isMulti(ev){
+  return (ev.dateTo && ev.dateTo!==ev.date) || (ev.endDate && ev.endDate!==ev.date);
+}
+
 async function load(){
-  const r=await fetch('events.json?t='+Date.now());allData=await r.json();
-  map=L.map('map').setView([51.161368,13.4716919],15);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+  try{
+    const r=await fetch('events.json?'+Date.now());
+    allEvents=await r.json();
+  }catch(e){
+    document.getElementById('calendar').textContent='events.json nicht gefunden';
+    return;
+  }
   render();
-  document.getElementById('badge-html').textContent=`<a href="https://mondlicht-und-sterne.github.io/meissen/" target="_blank" rel="noopener" style="display:inline-block;padding:6px 12px;background:#111;color:#fff;border-radius:999px;font-family:system-ui,sans-serif;font-size:14px;font-weight:600;text-decoration:none;">Meissen Kalender</a>`;
-  document.getElementById('badge-md').textContent=`[Meissen Kalender](https://mondlicht-und-sterne.github.io/meissen/)`;
 }
+
 function render(){
-  const container=document.getElementById('events');container.innerHTML='';markers.forEach(m=>map.removeLayer(m));markers=[];const bounds=[];
-  const linkify=t=>(t||'').replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');
-  let filtered=allData.filter(ev=>currentCat==='alle'||(ev.cat||'').toLowerCase()===currentCat.toLowerCase()).sort((a,b)=>new Date(a.date)-new Date(b.date));
-  filtered.forEach(ev=>{
-    if(ev.lat&&ev.lon){
-      const m=L.marker([ev.lat,ev.lon]).addTo(map);
-      m.bindPopup(`<b>${ev.title}</b><br>${ev.place||''}<br><small>${ev.date} ${ev.time||''}</small>${ev.link?`<br><a href="${ev.link}" target="_blank">${ev.link_label||'Link'}</a>`:''}`);
-      markers.push(m);bounds.push([ev.lat,ev.lon]);
+  const cal=document.getElementById('calendar');
+  cal.innerHTML='';
+  // sammle alle relevanten Tage aus Events (nächste 60 Tage + alle Event-Tage)
+  const daysSet=new Set();
+  allEvents.forEach(ev=>{
+    const start=ev.startDate||ev.date;
+    const end=ev.endDate||ev.dateTo||ev.date;
+    if(!start) return;
+    let cur=new Date(start);
+    const endD=new Date(end);
+    for(let d=new Date(cur); d<=endD; d.setDate(d.getDate()+1)){
+      daysSet.add(d.toISOString().slice(0,10));
     }
-    const cls=catClass(ev.cat);
-    container.innerHTML+=`<div class="card"><span class="badge ${cls}">${ev.cat||''}</span><div><small>${ev.date}${ev.date_end?' – '+ev.date_end:''} ${ev.time||''}</small></div><h3>${ev.title}</h3><small>${ev.place||''}</small><p>${linkify(ev.desc||'')}</p>${ev.link?`<a class="btn" href="${ev.link}" target="_blank" rel="noopener">${ev.link_label||'Mehr Infos'} ↗</a>`:''}</div>`;
   });
-  if(bounds.length)map.fitBounds(bounds,{padding:[30,30]});setTimeout(()=>map.invalidateSize(),200);
+  // sortiert
+  const days=[...daysSet].sort();
+  if(days.length===0){ cal.textContent='Keine Events'; return; }
+
+  days.forEach(dayStr=>{
+    const evs=allEvents.filter(e=>{
+      const catMatch=activeCat==='all' || e.cat===activeCat;
+      return catMatch && isOnDay(e, dayStr);
+    });
+    if(evs.length===0) return;
+    const dayDiv=document.createElement('div');
+    dayDiv.className='day';
+    const d=new Date(dayStr);
+    const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});
+    const nice=d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});
+    dayDiv.innerHTML=`<div class="dayHeader"><div class="dayDate">${nice}</div><div class="dayWeekday">${weekday}</div></div>`;
+    evs.forEach(ev=>{
+      const multi=isMulti(ev);
+      const el=document.createElement('div');
+      el.className='event'+(multi?' multi':'');
+      el.innerHTML=`
+        <div class="eventTitle">${ev.title||'Ohne Titel'} ${multi?`<span class="badge multiBadge">${formatLabel(ev)}</span>`:`<span class="badge">${ev.cat||''}</span>`}</div>
+        <div class="eventMeta">${ev.time||''} ${ev.place?'· '+ev.place:''} ${!multi&&ev.cat?'· '+ev.cat:''}</div>
+        ${ev.desc?`<div class="eventDesc">${ev.desc}</div>`:''}
+        ${ev.link?`<a class="link" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos →'}</a>`:''}
+      `;
+      dayDiv.appendChild(el);
+    });
+    cal.appendChild(dayDiv);
+  });
 }
-document.getElementById('filters').addEventListener('click',e=>{if(e.target.tagName==='BUTTON'){document.querySelectorAll('#filters button').forEach(b=>b.classList.remove('active'));e.target.classList.add('active');currentCat=e.target.dataset.cat;render();}});
+
+document.querySelectorAll('#filters button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    activeCat=b.dataset.cat;
+    render();
+  };
+});
+
 load();
 </script>
 </body>
