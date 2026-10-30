@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Event vorschlagen - Meißen Kalender</title>
+<title>Event vorschlagen</title>
 <style>
 :root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732}
 body{font-family:system-ui,sans-serif;margin:0;background:var(--bg);color:var(--text);padding:20px 16px 80px}
@@ -11,56 +11,51 @@ form{max-width:640px;margin:0 auto;background:var(--card);border:1px solid var(-
 label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px;display:grid;gap:6px}
 input,textarea,select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:#11110f;color:var(--text);font-size:15px;box-sizing:border-box}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.check{flex-direction:row;align-items:center;gap:8px;display:flex;font-size:13px;color:var(--text);text-transform:none;font-weight:600;letter-spacing:0}
+.check input{width:auto}
 .btn{padding:13px;border-radius:999px;border:0;background:var(--text);color:#111;font-weight:900;cursor:pointer;font-size:16px}
 .btn2{padding:9px 14px;border-radius:999px;background:var(--border);color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .btn2.primary{background:var(--text);color:#111}
 #output{max-width:640px;margin:20px auto;background:#11110f;border:1px dashed var(--border);border-radius:16px;padding:16px;display:none}
-code{white-space:pre-wrap;word-break:break-all;font-size:12px;color:#d6d2c9;display:block;background:#00000066;padding:12px;border-radius:10px;margin:12px 0}
+code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;background:#00000066;padding:12px;border-radius:10px;margin:12px 0}
 .share-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 </style>
 </head>
 <body>
 <h1>Event vorschlagen</h1>
-<div class="sub">Trägt ein Event direkt als GitHub Issue in mondlicht-und-sterne/meissen ein</div>
+<div class="sub">Einzelner Tag oder mehrere Tage - geht beides</div>
 <form id="f">
-  <label>Titel *<input id="title" required placeholder="Spieleabend bei Mondlicht"></label>
-  <div class="row"><label>Datum *<input id="date" type="date" required></label><label>Uhrzeit<input id="time" placeholder="19:00"></label></div>
-  <div class="row"><label>Kategorie<select id="cat"><option>Verein</option><option>Spieleabend</option><option>Markt</option><option>Andere</option></select></label><label>Ort<input id="place" placeholder="Burgstraße 28, 01662 Meißen"></label></div>
-  <div class="row"><label>Lat<input id="lat" type="number" step="any" placeholder="51.1613680"></label><label>Lon<input id="lon" type="number" step="any" placeholder="13.4716919"></label></div>
+  <label>Titel *<input id="title" required></label>
+  <div class="row"><label>Start Datum *<input id="dateFrom" type="date" required></label><label>End Datum (optional)<input id="dateTo" type="date"></label></div>
+  <label class="check"><input type="checkbox" id="multiCheck"> Mehrtägiges Event</label>
+  <div class="row"><label>Uhrzeit<input id="time" placeholder="19:00 / täglich 10-18 Uhr"></label><label>Kategorie<select id="cat"><option>Verein</option><option>Spieleabend</option><option>Markt</option><option>Andere</option></select></label></div>
+  <label>Ort<input id="place" placeholder="Burgstraße 28, 01662 Meißen"></label>
+  <div class="row"><label>Lat<input id="lat" type="number" step="any"></label><label>Lon<input id="lon" type="number" step="any"></label></div>
   <button type="button" class="btn2" id="geoBtn">📍 Koordinaten holen</button>
   <label>Beschreibung<textarea id="desc"></textarea></label>
-  <label>Weblink<input id="link" placeholder="https://..."></label>
-  <label>Link-Text<input id="link_label" placeholder="Mehr Infos"></label>
-  <button type="submit" class="btn">JSON erzeugen + Issue öffnen</button>
+  <label>Weblink<input id="link"></label>
+  <button type="submit" class="btn">JSON + GitHub Issue</button>
 </form>
-<div id="output">
-  <code id="json"></code>
-  <div class="share-row">
-    <button class="btn2 primary" id="copyBtn">📋 Kopieren</button>
-    <a class="btn2 primary" id="githubBtn" target="_blank" rel="noopener">🐙 GitHub Issue öffnen</a>
-  </div>
-</div>
+<div id="output"><code id="json"></code><div class="share-row"><button class="btn2 primary" id="copyBtn">📋 Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a></div></div>
 <script>
-const REPO = "mondlicht-und-sterne/meissen";
-document.getElementById('geoBtn').onclick=()=>{
-  const q=document.getElementById('place').value; if(!q) return alert('Ort eingeben');
-  fetch(https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1)
-  .then(r=>r.json()).then(d=>{ if(d[0]){ document.getElementById('lat').value=d[0].lat; document.getElementById('lon').value=d[0].lon; } });
-};
+const REPO="mondlicht-und-sterne/meissen";
+geoBtn.onclick=()=>{const q=place.value; if(!q) return alert('Ort eingeben'); fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`).then(r=>r.json()).then(d=>{if(d[0]){lat.value=d[0].lat;lon.value=d[0].lon;}});};
+multiCheck.onchange=()=>{ dateTo.style.display=multiCheck.checked?'block':'block'; if(!multiCheck.checked) dateTo.value=''; };
 let lastText="";
-document.getElementById('f').addEventListener('submit',e=>{
+f.addEventListener('submit',e=>{
   e.preventDefault();
-  const ev={title:title.value.trim(),date:date.value,time:time.value.trim()undefined,place:place.value.trim()undefined,cat:cat.value,lat:parseFloat(lat.value)undefined,lon:parseFloat(lon.value)undefined,desc:desc.value.trim()undefined,link:link.value.trim()undefined,link_label:link_label.value.trim()||undefined};
-Object.keys(ev).forEach(k=>ev[k]===undefined&&delete ev[k]);
+  const from=dateFrom.value, to=dateTo.value;
+  const ev={title:title.value.trim(),cat:cat.value,place:place.value.trim()||undefined,lat:parseFloat(lat.value)||undefined,lon:parseFloat(lon.value)||undefined,time:time.value.trim()||undefined,desc:desc.value.trim()||undefined,link:link.value.trim()||undefined};
+  if(from && to && to!==from && to>from){ ev.date=from; ev.dateTo=to; ev.startDate=from; ev.endDate=to; } else { ev.date=from; }
+  Object.keys(ev).forEach(k=>ev[k]===undefined&&delete ev[k]);
   lastText=JSON.stringify(ev,null,2)+',';
   json.textContent=lastText; output.style.display='block';
-  const t=encodeURIComponent(Event: ${ev.title} am ${ev.date});
-  const b=encodeURIComponent(Neues Event:\n\n\\\json\n${JSON.stringify(ev,null,2)}\n\\\\n\nOrt: ${ev.place||''}\nQuelle: Formular);
-  githubBtn.href=https://github.com/${REPO}/issues/new?title=${t}&body=${b}&labels=event-vorschlag;
-  githubBtn.click();
-  window.scrollTo({top:9999,behavior:'smooth'});
+  const titleStr = ev.dateTo ? `Event: ${ev.title} ${ev.date} bis ${ev.dateTo}` : `Event: ${ev.title} am ${ev.date}`;
+  const b=encodeURIComponent(`**${titleStr}**\n\nMehrere Tage: ${ev.dateTo ? 'Ja, '+ev.date+' bis '+ev.dateTo : 'Nein'}\n\n\`\`\`json\n${JSON.stringify(ev,null,2)}\n\`\`\``);
+  githubBtn.href=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(titleStr)}&body=${b}&labels=event-vorschlag`;
+  window.open(githubBtn.href,'_blank');
 });
-copyBtn.onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{copyBtn.textContent='✅ Kopiert!'; setTimeout(()=>copyBtn.textContent='📋 Kopieren',1500);});
+copyBtn.onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{copyBtn.textContent='✅ Kopiert'; setTimeout(()=>copyBtn.textContent='📋 Kopieren',1500);});
 </script>
 </body>
-</html>  
+</html>
