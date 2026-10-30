@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meissen Kalender</title>
+<title>Mondlicht & Sterne - Kalender Meißen</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -49,7 +49,7 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 </head>
 <body>
 <header>
-  <div><h1>Meissen Kalender</h1><div class="sub">von mondstern</div></div>
+  <div><h1>Meißen Kalender</h1><div class="sub">Mondlicht & Sterne</div></div>
   <a class="btn" href="formular.html">+ Event vorschlagen</a>
 </header>
 <div id="filters">
@@ -63,8 +63,8 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 <div id="calendar">Lade events.json...</div>
 
 <div id="forOthers">
-  <h2>Meissen Kalender für Deine Webseite</h2>
-  
+  <h2>Meißen Kalender für Andere Webseiten</h2>
+  <p>Fix für 404 bei Rubriken - kein - mehr im Label</p>
   <label>Vorschau<div class="previewBox" id="badgePreview"></div></label>
   <label>1. Shields.io Badge URL<textarea id="shieldsCode" readonly></textarea></label>
   <label>2. HTML Link<textarea id="htmlCode" readonly></textarea></label>
@@ -73,8 +73,6 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 
 <script>
 let allEvents=[]; let activeCat='all'; let map; let markers=[];
-
-// FIX: Ohne toISOString - lokale Datums-Logik für Kunstfest
 function parseLocal(s){ if(!s) return null; const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 function toLocalStr(dt){ const y=dt.getFullYear(); const m=String(dt.getMonth()+1).padStart(2,'0'); const d=String(dt.getDate()).padStart(2,'0'); return `${y}-${m}-${d}`; }
 function isOnDay(ev, dayStr){ const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date; if(!s) return false; return dayStr>=s && dayStr<=e; }
@@ -96,11 +94,11 @@ function updateMap(){
 }
 async function load(){ initMap(); try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt'; return; } render(); }
 
+function escBadge(s){ return encodeURIComponent(s.replace(/-/g,'--').replace(/_/g,'__')); }
+
 function render(){
   const cal=document.getElementById('calendar'); cal.innerHTML='';
   const allFiltered = allEvents.filter(e=>activeCat==='all'||e.cat===activeCat);
-  
-  // FIX: Tage korrekt sammeln ohne toISOString
   const daysSet=new Set();
   allFiltered.forEach(ev=>{
     const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date;
@@ -113,7 +111,6 @@ function render(){
     }
   });
   const days=[...daysSet].sort();
-  
   days.forEach(dayStr=>{
     const evs=allFiltered.filter(e=>isOnDay(e,dayStr));
     if(!evs.length) return;
@@ -129,8 +126,6 @@ function render(){
     });
     cal.appendChild(dayDiv);
   });
-
-  // Ohne Datum
   const withoutDate = allFiltered.filter(e=>!e.date && !e.startDate);
   if(withoutDate.length){
     const dayDiv=document.createElement('div'); dayDiv.className='day';
@@ -143,24 +138,23 @@ function render(){
     });
     cal.appendChild(dayDiv);
   }
-
   updateMap();
 
   const baseUrl = "https://mondlicht-und-sterne.github.io/meissen/";
   const currentUrl = activeCat !== 'all' ? `${baseUrl}?cat=${activeCat}` : baseUrl;
-  const label = activeCat !== 'all' ? `Meißen Kalender - ${activeCat}` : `Meißen Kalender`;
+  const labelRaw = activeCat !== 'all' ? `Meißen Kalender ${activeCat}` : `Meißen Kalender`;
+  const label = labelRaw.replace(/ - /g,' ').replace(/-/g,' ').trim();
   const count = allFiltered.length;
-  const badgeUrl = `https://img.shields.io/badge/${encodeURIComponent(label)}-${count}%20Events-2ea44f?style=for-the-badge&logo=calendar&logoColor=white`;
-  const shieldsMarkdown = `[![${label}](${badgeUrl})](${currentUrl})`;
-  const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${label}">\n</a>`;
-  const mdLink = `[${label} - ${count} Events](${currentUrl})\n\n${shieldsMarkdown}`;
+  const badgeUrl = `https://img.shields.io/badge/${escBadge(label)}-${count}%20Events-2ea44f?style=for-the-badge&logo=calendar&logoColor=white`;
+  const shieldsMarkdown = `[![${labelRaw}](${badgeUrl})](${currentUrl})`;
+  const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${labelRaw}">\n</a>`;
+  const mdLink = `[${labelRaw} - ${count} Events](${currentUrl})\n\n${shieldsMarkdown}`;
 
-  document.getElementById('badgePreview').innerHTML = `<a href="${currentUrl}" target="_blank"><img src="${badgeUrl}" alt="${label}"></a>`;
+  document.getElementById('badgePreview').innerHTML = `<a href="${currentUrl}" target="_blank"><img src="${badgeUrl}" alt="${labelRaw}"></a>`;
   document.getElementById('shieldsCode').value = badgeUrl;
   document.getElementById('htmlCode').value = htmlLink;
   document.getElementById('mdCode').value = mdLink;
 }
-
 document.querySelectorAll('#filters button').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); activeCat=b.dataset.cat; render(); }; });
 load();
 </script>
