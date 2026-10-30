@@ -66,8 +66,8 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 <div id="calendar">Lade events.json...</div>
 
 <div id="forOthers">
-  <h2>Meißen Kalender für Andere Webseiten</h2>
-  <p>Lesbare Rubriken + Badge Fix + Kunstfest Fix</p>
+  <h2>Meißen Kalender für Deine Webseite</h2>
+  
   <label>Vorschau<div class="previewBox" id="badgePreview"></div></label>
   <label>1. Shields.io Badge URL<textarea id="shieldsCode" readonly></textarea></label>
   <label>2. HTML Link<textarea id="htmlCode" readonly></textarea></label>
@@ -95,7 +95,7 @@ function updateMap(){
   if(markers.length){ map.fitBounds(L.featureGroup(markers).getBounds().pad(0.3)); }
 }
 async function load(){ initMap(); try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt'; return; } render(); }
-function escBadge(s){ return encodeURIComponent(s.replace(/-/g,'--').replace(/_/g,'__')); }
+
 function render(){
   const cal=document.getElementById('calendar'); cal.innerHTML='';
   const allFiltered = allEvents.filter(e=>activeCat==='all'||e.cat===activeCat);
@@ -126,28 +126,18 @@ function render(){
     });
     cal.appendChild(dayDiv);
   });
-  const withoutDate = allFiltered.filter(e=>!e.date && !e.startDate);
-  if(withoutDate.length){
-    const dayDiv=document.createElement('div'); dayDiv.className='day';
-    dayDiv.innerHTML=`<div class="dayHeader"><div class="dayDate">Ohne Datum</div><div class="dayWeekday">${withoutDate.length} Event(s)</div></div>`;
-    withoutDate.forEach(ev=>{
-      const cc=catClass(ev.cat); const bc=badgeClass(ev.cat);
-      const el=document.createElement('div'); el.className='event cat-'+cc;
-      el.innerHTML=`<div class="eventTitle">${ev.title} <span class="badge ${bc}">${ev.cat||'Andere'}</span></div><div class="eventMeta">${ev.time||''} ${ev.place?'· '+ev.place:''}</div>`;
-      dayDiv.appendChild(el);
-    });
-    cal.appendChild(dayDiv);
-  }
   updateMap();
+
   const baseUrl = "https://mondlicht-und-sterne.github.io/meissen/";
   const currentUrl = activeCat !== 'all' ? `${baseUrl}?cat=${activeCat}` : baseUrl;
-  const labelRaw = activeCat !== 'all' ? `Meißen Kalender ${activeCat}` : `Meißen Kalender`;
-  const label = labelRaw.replace(/ - /g,' ').replace(/-/g,' ').trim();
-  const count = allFiltered.length;
-  const badgeUrl = `https://img.shields.io/badge/${escBadge(label)}-${count}%20Events-2ea44f?style=for-the-badge&logo=calendar&logoColor=white`;
+  const labelRaw = activeCat !== 'all' ? `Meissen ${activeCat} Kalender` : `Meissen Kalender`;
+
+  // IMMER grau Meissen / grün Kalender
+  const badgeUrl = `https://img.shields.io/badge/Meissen-Kalender-2ea44f?style=for-the-badge&logo=calendar&logoColor=white`;
   const shieldsMarkdown = `[![${labelRaw}](${badgeUrl})](${currentUrl})`;
   const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${labelRaw}">\n</a>`;
-  const mdLink = `[${labelRaw} - ${count} Events](${currentUrl})\n\n${shieldsMarkdown}`;
+  const mdLink = `[${labelRaw}](${currentUrl})\n\n${shieldsMarkdown}`;
+
   document.getElementById('badgePreview').innerHTML = `<a href="${currentUrl}" target="_blank"><img src="${badgeUrl}" alt="${labelRaw}"></a>`;
   document.getElementById('shieldsCode').value = badgeUrl;
   document.getElementById('htmlCode').value = htmlLink;
@@ -157,4 +147,5 @@ document.querySelectorAll('#filters button').forEach(b=>{ b.onclick=()=>{ docume
 load();
 </script>
 </body>
+</html>
 </html>
