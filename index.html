@@ -13,13 +13,16 @@ header{max-width:900px;margin:0 auto 16px;display:flex;justify-content:space-bet
 h1{margin:0;font-size:24px} .sub{color:var(--muted);font-size:13px;margin-top:4px}
 a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;text-decoration:none;font-weight:900;font-size:13px}
 #filters{max-width:900px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap}
-#filters button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:13px;font-weight:700}
-#filters button.active{color:#111}
-#filters button[data-cat="all"].active{background:var(--text);border-color:var(--text)}
-#filters button[data-cat="Verein"]{color:var(--c-verein)} #filters button[data-cat="Verein"].active{background:var(--c-verein)}
-#filters button[data-cat="Spieleabend"]{color:var(--c-spiele)} #filters button[data-cat="Spieleabend"].active{background:var(--c-spiele)}
-#filters button[data-cat="Markt"]{color:var(--c-markt)} #filters button[data-cat="Markt"].active{background:var(--c-markt);color:#111}
-#filters button[data-cat="Andere"]{color:var(--c-andere)} #filters button[data-cat="Andere"].active{background:var(--c-andere)}
+#filters button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;font-weight:700;color:var(--muted)}
+#filters button[data-cat="Verein"]{color:var(--c-verein)}
+#filters button[data-cat="Spieleabend"]{color:var(--c-spiele)}
+#filters button[data-cat="Markt"]{color:var(--c-markt)}
+#filters button[data-cat="Andere"]{color:var(--c-andere)}
+#filters button.active{color:#111 !important;background:var(--text) !important;border-color:var(--text) !important}
+#filters button[data-cat="Verein"].active{background:var(--c-verein) !important;color:#111 !important}
+#filters button[data-cat="Spieleabend"].active{background:var(--c-spiele) !important;color:#111 !important}
+#filters button[data-cat="Markt"].active{background:var(--c-markt) !important;color:#111 !important}
+#filters button[data-cat="Andere"].active{background:var(--c-andere) !important;color:#111 !important}
 #mapWrap{max-width:900px;width:92%;margin:0 auto 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
 #map{height:280px;width:100%}
 @media(min-width:1000px){ #mapWrap{width:100%} #map{height:320px} }
@@ -64,7 +67,7 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 
 <div id="forOthers">
   <h2>Meißen Kalender für Andere Webseiten</h2>
-  <p>Fix für 404 bei Rubriken - kein - mehr im Label</p>
+  <p>Lesbare Rubriken + Badge Fix + Kunstfest Fix</p>
   <label>Vorschau<div class="previewBox" id="badgePreview"></div></label>
   <label>1. Shields.io Badge URL<textarea id="shieldsCode" readonly></textarea></label>
   <label>2. HTML Link<textarea id="htmlCode" readonly></textarea></label>
@@ -81,7 +84,6 @@ function isMulti(ev){ const e=ev.endDate||ev.dateTo; return e&&e!==ev.date; }
 const catClass=c=> c==='Verein'?'Verein':c==='Spieleabend'?'Spieleabend':c==='Markt'?'Markt':'Andere';
 const badgeClass=c=> c==='Verein'?'verein':c==='Spieleabend'?'spiele':c==='Markt'?'markt':'andere';
 const catColor=c=> c==='Verein'?'#60a5fa':c==='Spieleabend'?'#a78bfa':c==='Markt'?'#fbbf24':'#34d399';
-
 function initMap(){ map=L.map('map').setView([51.163,13.47],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }
 function updateMap(){
   markers.forEach(m=>map.removeLayer(m)); markers=[];
@@ -93,9 +95,7 @@ function updateMap(){
   if(markers.length){ map.fitBounds(L.featureGroup(markers).getBounds().pad(0.3)); }
 }
 async function load(){ initMap(); try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt'; return; } render(); }
-
 function escBadge(s){ return encodeURIComponent(s.replace(/-/g,'--').replace(/_/g,'__')); }
-
 function render(){
   const cal=document.getElementById('calendar'); cal.innerHTML='';
   const allFiltered = allEvents.filter(e=>activeCat==='all'||e.cat===activeCat);
@@ -139,7 +139,6 @@ function render(){
     cal.appendChild(dayDiv);
   }
   updateMap();
-
   const baseUrl = "https://mondlicht-und-sterne.github.io/meissen/";
   const currentUrl = activeCat !== 'all' ? `${baseUrl}?cat=${activeCat}` : baseUrl;
   const labelRaw = activeCat !== 'all' ? `Meißen Kalender ${activeCat}` : `Meißen Kalender`;
@@ -149,7 +148,6 @@ function render(){
   const shieldsMarkdown = `[![${labelRaw}](${badgeUrl})](${currentUrl})`;
   const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${labelRaw}">\n</a>`;
   const mdLink = `[${labelRaw} - ${count} Events](${currentUrl})\n\n${shieldsMarkdown}`;
-
   document.getElementById('badgePreview').innerHTML = `<a href="${currentUrl}" target="_blank"><img src="${badgeUrl}" alt="${labelRaw}"></a>`;
   document.getElementById('shieldsCode').value = badgeUrl;
   document.getElementById('htmlCode').value = htmlLink;
