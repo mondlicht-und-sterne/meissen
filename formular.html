@@ -2,60 +2,131 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Event vorschlagen</title>
+<title>Event vorschlagen - Meißen Kalender</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732}
+:root{
+--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;
+--c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-andere:#34d399;
+}
 body{font-family:system-ui,sans-serif;margin:0;background:var(--bg);color:var(--text);padding:20px 16px 80px}
-h1{max-width:640px;margin:0 auto 8px} .sub{max-width:640px;margin:0 auto 20px;color:var(--muted);font-size:14px}
-form{max-width:640px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:grid;gap:14px}
+h1{max-width:720px;margin:0 auto 8px} .sub{max-width:720px;margin:0 auto 16px;color:var(--muted);font-size:14px}
+form{max-width:720px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:grid;gap:14px}
 label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px;display:grid;gap:6px}
 input,textarea,select{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--border);background:#11110f;color:var(--text);font-size:15px;box-sizing:border-box}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.check{flex-direction:row;align-items:center;gap:8px;display:flex;font-size:13px;color:var(--text);text-transform:none;font-weight:600;letter-spacing:0}
+.check{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:13px;color:var(--text);text-transform:none;font-weight:600;letter-spacing:0}
 .check input{width:auto}
 .btn{padding:13px;border-radius:999px;border:0;background:var(--text);color:#111;font-weight:900;cursor:pointer;font-size:16px}
 .btn2{padding:9px 14px;border-radius:999px;background:var(--border);color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .btn2.primary{background:var(--text);color:#111}
-#output{max-width:640px;margin:20px auto;background:#11110f;border:1px dashed var(--border);border-radius:16px;padding:16px;display:none}
+#mapWrap{border-radius:12px;overflow:hidden;border:1px solid var(--border);height:300px;display:none}
+#map{height:100%;width:100%}
+#output{max-width:720px;margin:20px auto;background:#11110f;border:1px dashed var(--border);border-radius:16px;padding:16px;display:none}
 code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;background:#00000066;padding:12px;border-radius:10px;margin:12px 0}
-.share-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.badge{font-size:10px;padding:3px 8px;border-radius:999px;font-weight:800;display:inline-block}
+.badge.verein{background:var(--c-verein);color:#111} .badge.spiele{background:var(--c-spiele);color:#111}
+.badge.markt{background:var(--c-markt);color:#111} .badge.andere{background:var(--c-andere);color:#111}
 </style>
 </head>
 <body>
 <h1>Event vorschlagen</h1>
-<div class="sub">Einzelner Tag oder mehrere Tage - geht beides</div>
+<div class="sub">Mit Karte, Mehrtage-Support und direktem GitHub Issue</div>
 <form id="f">
-  <label>Titel *<input id="title" required></label>
+  <label>Titel *<input id="title" required placeholder="Spieleabend bei Mondlicht"></label>
   <div class="row"><label>Start Datum *<input id="dateFrom" type="date" required></label><label>End Datum (optional)<input id="dateTo" type="date"></label></div>
-  <label class="check"><input type="checkbox" id="multiCheck"> Mehrtägiges Event</label>
-  <div class="row"><label>Uhrzeit<input id="time" placeholder="19:00 / täglich 10-18 Uhr"></label><label>Kategorie<select id="cat"><option>Verein</option><option>Spieleabend</option><option>Markt</option><option>Andere</option></select></label></div>
+  <label class="check"><input type="checkbox" id="multiCheck"> Mehrtägiges Event (bis Datum nutzen)</label>
+  <div class="row"><label>Uhrzeit<input id="time" placeholder="19:00 / täglich 10-18 Uhr"></label><label>Kategorie<select id="cat"><option value="Verein">Verein</option><option value="Spieleabend">Spieleabend</option><option value="Markt">Markt</option><option value="Andere">Andere</option></select><span id="catPreview"></span></label></div>
   <label>Ort<input id="place" placeholder="Burgstraße 28, 01662 Meißen"></label>
-  <div class="row"><label>Lat<input id="lat" type="number" step="any"></label><label>Lon<input id="lon" type="number" step="any"></label></div>
-  <button type="button" class="btn2" id="geoBtn">📍 Koordinaten holen</button>
-  <label>Beschreibung<textarea id="desc"></textarea></label>
-  <label>Weblink<input id="link"></label>
-  <button type="submit" class="btn">JSON + GitHub Issue</button>
+  <div class="row"><label>Lat<input id="lat" type="number" step="any" placeholder="51.1613680"></label><label>Lon<input id="lon" type="number" step="any" placeholder="13.4716919"></label></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button type="button" class="btn2" id="geoBtn">📍 Koordinaten aus Ort holen</button>
+    <button type="button" class="btn2" id="mapBtn">🗺️ Auf Karte zeigen</button>
+  </div>
+  <div id="mapWrap"><div id="map"></div></div>
+  <label>Beschreibung<textarea id="desc" placeholder="Worum geht's?"></textarea></label>
+  <label>Weblink<input id="link" placeholder="https://..."></label>
+  <label>Link-Text<input id="link_label" placeholder="Mehr Infos"></label>
+  <button type="submit" class="btn">JSON erzeugen + GitHub Issue öffnen</button>
 </form>
-<div id="output"><code id="json"></code><div class="share-row"><button class="btn2 primary" id="copyBtn">📋 Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a></div></div>
+<div id="output"><code id="json"></code><div style="display:flex;gap:8px"><button class="btn2 primary" id="copyBtn">📋 Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a></div></div>
+
 <script>
 const REPO="mondlicht-und-sterne/meissen";
-geoBtn.onclick=()=>{const q=place.value; if(!q) return alert('Ort eingeben'); fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`).then(r=>r.json()).then(d=>{if(d[0]){lat.value=d[0].lat;lon.value=d[0].lon;}});};
-multiCheck.onchange=()=>{ dateTo.style.display=multiCheck.checked?'block':'block'; if(!multiCheck.checked) dateTo.value=''; };
+let map, marker;
+
+function initMap(){
+  if(map) return;
+  map=L.map('map').setView([51.163,13.47],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);
+  map.on('click', e=>{
+    document.getElementById('lat').value=e.latlng.lat.toFixed(7);
+    document.getElementById('lon').value=e.latlng.lng.toFixed(7);
+    updateMarker();
+  });
+}
+function updateMarker(){
+  const lat=parseFloat(document.getElementById('lat').value);
+  const lon=parseFloat(document.getElementById('lon').value);
+  if(!lat||!lon||!map) return;
+  if(marker) map.removeLayer(marker);
+  const cat=document.getElementById('cat').value;
+  const col=cat==='Verein'?'#60a5fa':cat==='Spieleabend'?'#a78bfa':cat==='Markt'?'#fbbf24':'#34d399';
+  marker=L.circleMarker([lat,lon],{radius:10,color:col,fillColor:col,fillOpacity:.9,weight:2}).addTo(map);
+  map.setView([lat,lon],15);
+}
+function showMap(){
+  document.getElementById('mapWrap').style.display='block';
+  initMap();
+  setTimeout(()=>{ map.invalidateSize(); updateMarker(); },200);
+}
+function catBadge(cat){
+  const cls=cat==='Verein'?'verein':cat==='Spieleabend'?'spiele':cat==='Markt'?'markt':'andere';
+  return `<span class="badge ${cls}">${cat}</span>`;
+}
+
+document.getElementById('cat').addEventListener('change', e=>{
+  document.getElementById('catPreview').innerHTML=catBadge(e.target.value);
+  updateMarker();
+});
+document.getElementById('catPreview').innerHTML=catBadge('Verein');
+
+document.getElementById('geoBtn').onclick=()=>{
+  const q=document.getElementById('place').value; if(!q) return alert('Ort eingeben');
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`)
+  .then(r=>r.json()).then(d=>{
+    if(d[0]){ 
+      document.getElementById('lat').value=d[0].lat; 
+      document.getElementById('lon').value=d[0].lon; 
+      showMap();
+    } else alert('Nichts gefunden');
+  });
+};
+document.getElementById('mapBtn').onclick=()=>{
+  if(!document.getElementById('lat').value) return alert('Erst Ort geocoden oder Lat/Lon eingeben');
+  showMap();
+};
+['lat','lon'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{ if(document.getElementById('mapWrap').style.display==='block') updateMarker(); }));
+
 let lastText="";
-f.addEventListener('submit',e=>{
+document.getElementById('f').addEventListener('submit', e=>{
   e.preventDefault();
   const from=dateFrom.value, to=dateTo.value;
-  const ev={title:title.value.trim(),cat:cat.value,place:place.value.trim()||undefined,lat:parseFloat(lat.value)||undefined,lon:parseFloat(lon.value)||undefined,time:time.value.trim()||undefined,desc:desc.value.trim()||undefined,link:link.value.trim()||undefined};
+  const ev={title:title.value.trim(),cat:cat.value,place:place.value.trim()||undefined,lat:parseFloat(lat.value)||undefined,lon:parseFloat(lon.value)||undefined,time:time.value.trim()||undefined,desc:desc.value.trim()||undefined,link:link.value.trim()||undefined,link_label:link_label.value.trim()||undefined};
   if(from && to && to!==from && to>from){ ev.date=from; ev.dateTo=to; ev.startDate=from; ev.endDate=to; } else { ev.date=from; }
   Object.keys(ev).forEach(k=>ev[k]===undefined&&delete ev[k]);
   lastText=JSON.stringify(ev,null,2)+',';
-  json.textContent=lastText; output.style.display='block';
-  const titleStr = ev.dateTo ? `Event: ${ev.title} ${ev.date} bis ${ev.dateTo}` : `Event: ${ev.title} am ${ev.date}`;
-  const b=encodeURIComponent(`**${titleStr}**\n\nMehrere Tage: ${ev.dateTo ? 'Ja, '+ev.date+' bis '+ev.dateTo : 'Nein'}\n\n\`\`\`json\n${JSON.stringify(ev,null,2)}\n\`\`\``);
-  githubBtn.href=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(titleStr)}&body=${b}&labels=event-vorschlag`;
-  window.open(githubBtn.href,'_blank');
+  document.getElementById('json').textContent=lastText;
+  document.getElementById('output').style.display='block';
+  const titleStr=ev.dateTo?`Event: ${ev.title} ${ev.date} bis ${ev.dateTo}`:`Event: ${ev.title} am ${ev.date}`;
+  const b=encodeURIComponent(`**${titleStr}**\nKategorie: ${ev.cat}\nOrt: ${ev.place||''}\nCoords: ${ev.lat||''},${ev.lon||''}\n\n\`\`\`json\n${JSON.stringify(ev,null,2)}\n\`\`\``);
+  const url=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(titleStr)}&body=${b}&labels=event-vorschlag`;
+  document.getElementById('githubBtn').href=url;
+  window.open(url,'_blank');
+  window.scrollTo({top:9999,behavior:'smooth'});
 });
-copyBtn.onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{copyBtn.textContent='✅ Kopiert'; setTimeout(()=>copyBtn.textContent='📋 Kopieren',1500);});
+document.getElementById('copyBtn').onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{copyBtn.textContent='✅ Kopiert'; setTimeout(()=>copyBtn.textContent='📋 Kopieren',1500);});
 </script>
 </body>
 </html>
