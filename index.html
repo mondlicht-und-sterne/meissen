@@ -8,11 +8,25 @@
 <style>
 :root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;--c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-andere:#34d399}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px 16px 50px}
-header{max-width:900px;margin:0 auto 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:0 16px 50px}
+header{
+  position:sticky;
+  top:0;
+  z-index:999;
+  background:var(--bg);
+  max-width:900px;
+  margin:0 auto 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:14px 0 12px;
+  border-bottom:1px solid var(--border);
+}
 h1{margin:0;font-size:24px} .sub{color:var(--muted);font-size:13px;margin-top:4px}
 a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;text-decoration:none;font-weight:900;font-size:13px}
-#filters{max-width:900px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap}
+#filters{max-width:900px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:62px;z-index:998;background:var(--bg);padding:8px 0}
 #filters button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;font-weight:700;color:var(--muted)}
 #filters button[data-cat="Verein"]{color:var(--c-verein)}
 #filters button[data-cat="Spieleabend"]{color:var(--c-spiele)}
@@ -53,7 +67,7 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 <body>
 <header>
   <div><h1>Meißen Kalender</h1><div class="sub">Mondlicht & Sterne</div></div>
-  <a class="btn" href="formular.html" target="_blank" rel="noopener">+ Event vorschlagen</a>
+  <a class="btn" href="formular.html" target="_self">+ Event vorschlagen</a>
 </header>
 <div id="filters">
   <button data-cat="all" class="active">Alle</button>
@@ -66,8 +80,8 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 <div id="calendar">Lade events.json...</div>
 
 <div id="forOthers">
-  <h2>Meißen Kalender für Deine Webseite</h2>
-  
+  <h2>Meißen Kalender für Andere Webseiten</h2>
+  <p>Sticky Header + Badge grau Meissen / grün Kalender</p>
   <label>Vorschau<div class="previewBox" id="badgePreview"></div></label>
   <label>1. Shields.io Badge URL<textarea id="shieldsCode" readonly></textarea></label>
   <label>2. HTML Link<textarea id="htmlCode" readonly></textarea></label>
@@ -127,17 +141,13 @@ function render(){
     cal.appendChild(dayDiv);
   });
   updateMap();
-
   const baseUrl = "https://mondlicht-und-sterne.github.io/meissen/";
   const currentUrl = activeCat !== 'all' ? `${baseUrl}?cat=${activeCat}` : baseUrl;
   const labelRaw = activeCat !== 'all' ? `Meissen ${activeCat} Kalender` : `Meissen Kalender`;
-
-  // IMMER grau Meissen / grün Kalender
   const badgeUrl = `https://img.shields.io/badge/Meissen-Kalender-2ea44f?style=for-the-badge&logo=calendar&logoColor=white`;
   const shieldsMarkdown = `[![${labelRaw}](${badgeUrl})](${currentUrl})`;
   const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${labelRaw}">\n</a>`;
   const mdLink = `[${labelRaw}](${currentUrl})\n\n${shieldsMarkdown}`;
-
   document.getElementById('badgePreview').innerHTML = `<a href="${currentUrl}" target="_blank"><img src="${badgeUrl}" alt="${labelRaw}"></a>`;
   document.getElementById('shieldsCode').value = badgeUrl;
   document.getElementById('htmlCode').value = htmlLink;
@@ -147,5 +157,4 @@ document.querySelectorAll('#filters button').forEach(b=>{ b.onclick=()=>{ docume
 load();
 </script>
 </body>
-</html>
 </html>
