@@ -3,134 +3,158 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mondlicht & Sterne - Kalender Meißen</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;--green:#4ade80}
+:root{
+--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;
+--c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-andere:#34d399;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px}
-header{max-width:900px;margin:0 auto 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-h1{margin:0;font-size:22px}
-a.btn{padding:8px 14px;border-radius:999px;background:var(--text);color:#111;text-decoration:none;font-weight:800;font-size:13px}
-#filters{max-width:900px;margin:0 auto 16px;display:flex;gap:8px;flex-wrap:wrap}
-#filters button{padding:6px 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:13px}
-#filters button.active{background:var(--text);color:#111;border-color:var(--text)}
-#calendar{max-width:900px;margin:0 auto;display:grid;gap:12px}
-.day{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
-.dayHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.dayDate{font-weight:900}
-.dayWeekday{color:var(--muted);font-size:12px}
-.event{border-left:3px solid var(--border);padding:8px 10px;margin:8px 0;background:#11110f;border-radius:8px}
-.event.multi{border-left-color:var(--green)}
-.eventTitle{font-weight:800;font-size:14px}
+body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px 16px 40px}
+header{max-width:1000px;margin:0 auto 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+h1{margin:0;font-size:24px} .sub{color:var(--muted);font-size:13px;margin-top:4px}
+a.btn{padding:10px 16px;border-radius:999px;background:var(--text);color:#111;text-decoration:none;font-weight:900;font-size:13px}
+#filters{max-width:1000px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap}
+#filters button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:13px;font-weight:700}
+#filters button.active{color:#111}
+#filters button[data-cat="all"].active{background:var(--text);border-color:var(--text)}
+#filters button[data-cat="Verein"]{color:var(--c-verein)} #filters button[data-cat="Verein"].active{background:var(--c-verein)}
+#filters button[data-cat="Spieleabend"]{color:var(--c-spiele)} #filters button[data-cat="Spieleabend"].active{background:var(--c-spiele)}
+#filters button[data-cat="Markt"]{color:var(--c-markt)} #filters button[data-cat="Markt"].active{background:var(--c-markt);color:#111}
+#filters button[data-cat="Andere"]{color:var(--c-andere)} #filters button[data-cat="Andere"].active{background:var(--c-andere)}
+
+#mapWrap{max-width:1000px;margin:0 auto 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
+#map{height:360px;width:100%;background:#111}
+
+#calendar{max-width:1000px;margin:0 auto;display:grid;gap:12px}
+.day{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
+.dayHeader{display:flex;justify-content:space-between;margin-bottom:10px}
+.dayDate{font-weight:900} .dayWeekday{color:var(--muted);font-size:12px}
+.event{border-left:4px solid var(--border);padding:8px 10px;margin:8px 0;background:#11110f;border-radius:10px;cursor:pointer}
+.event.cat-Verein{border-left-color:var(--c-verein);background:#60a5fa18}
+.event.cat-Spieleabend{border-left-color:var(--c-spiele);background:#a78bfa18}
+.event.cat-Markt{border-left-color:var(--c-markt);background:#fbbf2418}
+.event.cat-Andere{border-left-color:var(--c-andere);background:#34d39918}
+.eventTitle{font-weight:800;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.badge{font-size:10px;padding:3px 8px;border-radius:999px;font-weight:800}
+.badge.verein{background:var(--c-verein);color:#111} .badge.spiele{background:var(--c-spiele);color:#111}
+.badge.markt{background:var(--c-markt);color:#111} .badge.andere{background:var(--c-andere);color:#111}
+.badge.multiBadge{background:var(--text);color:#111}
 .eventMeta{font-size:12px;color:var(--muted);margin-top:2px}
-.eventDesc{font-size:13px;margin-top:6px;line-height:1.4}
-.badge{font-size:10px;padding:2px 6px;border-radius:999px;background:var(--border);color:var(--muted);margin-left:6px}
-.badge.multiBadge{background:var(--green);color:#111}
-a.link{color:var(--green);text-decoration:none;font-size:12px}
+a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:600}
+
+#forOthers{max-width:1000px;margin:28px auto 0;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
+#forOthers h2{margin:0 0 8px;font-size:18px}
+#forOthers textarea{width:100%;background:#11110f;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;font-family:monospace;min-height:88px}
+#forOthers .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){#forOthers .row{grid-template-columns:1fr} #map{height:300px}}
+.leaflet-popup-content{font-family:system-ui;font-size:13px}
 </style>
 </head>
 <body>
 <header>
-  <h1>Meißen Kalender</h1>
+  <div><h1>Meißen Kalender</h1><div class="sub">Mondlicht & Sterne</div></div>
   <a class="btn" href="formular.html">+ Event vorschlagen</a>
 </header>
+
 <div id="filters">
   <button data-cat="all" class="active">Alle</button>
   <button data-cat="Verein">Verein</button>
   <button data-cat="Spieleabend">Spieleabend</button>
   <button data-cat="Markt">Markt</button>
+  <button data-cat="Andere">Andere</button>
 </div>
-<div id="calendar">Lade events.json...</div>
+
+<div id="mapWrap"><div id="map"></div></div>
+<div id="calendar">Lade...</div>
+
+<div id="forOthers">
+  <h2>Meißen Kalender für Andere Webseiten</h2>
+  <p style="color:var(--muted);font-size:13px">Mitnehmen für deine Seite:</p>
+  <div class="row">
+    <label style="font-size:11px;color:var(--muted);font-weight:800">HTML iFrame
+      <textarea id="htmlCode" readonly></textarea>
+    </label>
+    <label style="font-size:11px;color:var(--muted);font-weight:800">Markdown
+      <textarea id="mdCode" readonly></textarea>
+    </label>
+  </div>
+</div>
 
 <script>
-let allEvents=[];
-let activeCat='all';
-
-function parseDate(str){ return str; } // YYYY-MM-DD bleibt vergleichbar
+let allEvents=[]; let activeCat='all'; let map; let markers=[];
 
 function isOnDay(ev, dayStr){
-  if(!ev.date) return false;
-  const start = ev.startDate || ev.date;
-  const end = ev.endDate || ev.dateTo || ev.date;
-  return dayStr >= start && dayStr <= end;
+  const start=ev.startDate||ev.date; const end=ev.endDate||ev.dateTo||ev.date;
+  if(!start) return false; return dayStr>=start && dayStr<=end;
 }
-function formatLabel(ev){
-  if((ev.dateTo && ev.dateTo!==ev.date) || (ev.endDate && ev.endDate!==ev.date)){
-    const end = ev.endDate || ev.dateTo;
-    return `${ev.date} → ${end}`;
-  }
-  return ev.date;
+function formatLabel(ev){ const end=ev.endDate||ev.dateTo; if(end&&end!==ev.date) return `${ev.date} → ${end}`; return ev.date; }
+function isMulti(ev){ const end=ev.endDate||ev.dateTo; return end&&end!==ev.date; }
+const catClass=c=>{ if(c==='Verein')return'Verein'; if(c==='Spieleabend')return'Spieleabend'; if(c==='Markt')return'Markt'; return'Andere'; };
+const badgeClass=c=>{ if(c==='Verein')return'verein'; if(c==='Spieleabend')return'spiele'; if(c==='Markt')return'markt'; return'andere'; };
+const catColor=c=>{ if(c==='Verein')return'#60a5fa'; if(c==='Spieleabend')return'#a78bfa'; if(c==='Markt')return'#fbbf24'; return'#34d399'; };
+
+function initMap(){
+  map=L.map('map').setView([51.163,51.163,51.163].length? [51.163,13.47] : [51.163,13.47],13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map);
 }
-function isMulti(ev){
-  return (ev.dateTo && ev.dateTo!==ev.date) || (ev.endDate && ev.endDate!==ev.date);
+
+function updateMap(){
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  const filtered=allEvents.filter(e=>activeCat==='all'||e.cat===activeCat).filter(e=>e.lat&&e.lon);
+  filtered.forEach(ev=>{
+    const m=L.circleMarker([ev.lat,ev.lon],{radius:9,color:catColor(ev.cat),fillColor:catColor(ev.cat),fillOpacity:.9,weight:2}).addTo(map);
+    m.bindPopup(`<b>${ev.title}</b><br>${formatLabel(ev)} ${ev.time||''}<br>${ev.place||''}<br><small>${ev.cat||''}</small>`);
+    markers.push(m);
+  });
+  if(markers.length){ const g=L.featureGroup(markers); map.fitBounds(g.getBounds().pad(0.3)); }
 }
 
 async function load(){
-  try{
-    const r=await fetch('events.json?'+Date.now());
-    allEvents=await r.json();
-  }catch(e){
-    document.getElementById('calendar').textContent='events.json nicht gefunden';
-    return;
-  }
+  initMap();
+  try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt'; return; }
   render();
 }
 
 function render(){
-  const cal=document.getElementById('calendar');
-  cal.innerHTML='';
-  // sammle alle relevanten Tage aus Events (nächste 60 Tage + alle Event-Tage)
+  const cal=document.getElementById('calendar'); cal.innerHTML='';
   const daysSet=new Set();
   allEvents.forEach(ev=>{
-    const start=ev.startDate||ev.date;
-    const end=ev.endDate||ev.dateTo||ev.date;
-    if(!start) return;
-    let cur=new Date(start);
-    const endD=new Date(end);
-    for(let d=new Date(cur); d<=endD; d.setDate(d.getDate()+1)){
-      daysSet.add(d.toISOString().slice(0,10));
-    }
+    const start=ev.startDate||ev.date; const end=ev.endDate||ev.dateTo||ev.date; if(!start) return;
+    let d=new Date(start); const endD=new Date(end);
+    for(; d<=endD; d.setDate(d.getDate()+1)){ daysSet.add(d.toISOString().slice(0,10)); if(daysSet.size>120) break; }
   });
-  // sortiert
   const days=[...daysSet].sort();
-  if(days.length===0){ cal.textContent='Keine Events'; return; }
+  const filteredForEmbed=[];
 
   days.forEach(dayStr=>{
-    const evs=allEvents.filter(e=>{
-      const catMatch=activeCat==='all' || e.cat===activeCat;
-      return catMatch && isOnDay(e, dayStr);
-    });
-    if(evs.length===0) return;
-    const dayDiv=document.createElement('div');
-    dayDiv.className='day';
+    const evs=allEvents.filter(e=>(activeCat==='all'||e.cat===activeCat) && isOnDay(e,dayStr));
+    if(!evs.length) return;
+    evs.forEach(e=>filteredForEmbed.push({...e,_day:dayStr}));
+    const dayDiv=document.createElement('div'); dayDiv.className='day';
     const d=new Date(dayStr);
-    const weekday=d.toLocaleDateString('de-DE',{weekday:'long'});
-    const nice=d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'});
-    dayDiv.innerHTML=`<div class="dayHeader"><div class="dayDate">${nice}</div><div class="dayWeekday">${weekday}</div></div>`;
+    dayDiv.innerHTML=`<div class="dayHeader"><div class="dayDate">${d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}</div><div class="dayWeekday">${d.toLocaleDateString('de-DE',{weekday:'long'})}</div></div>`;
     evs.forEach(ev=>{
-      const multi=isMulti(ev);
-      const el=document.createElement('div');
-      el.className='event'+(multi?' multi':'');
-      el.innerHTML=`
-        <div class="eventTitle">${ev.title||'Ohne Titel'} ${multi?`<span class="badge multiBadge">${formatLabel(ev)}</span>`:`<span class="badge">${ev.cat||''}</span>`}</div>
-        <div class="eventMeta">${ev.time||''} ${ev.place?'· '+ev.place:''} ${!multi&&ev.cat?'· '+ev.cat:''}</div>
-        ${ev.desc?`<div class="eventDesc">${ev.desc}</div>`:''}
-        ${ev.link?`<a class="link" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos →'}</a>`:''}
-      `;
+      const cc=catClass(ev.cat); const bc=badgeClass(ev.cat);
+      const el=document.createElement('div'); el.className='event cat-'+cc;
+      el.innerHTML=`<div class="eventTitle">${ev.title} <span class="badge ${bc}">${ev.cat||'Andere'}</span> ${isMulti(ev)?`<span class="badge multiBadge">${formatLabel(ev)}</span>`:''}</div><div class="eventMeta">${ev.time||''} ${ev.place?'· '+ev.place:''}</div>${ev.link?`<a class="link" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos →'}</a>`:''}`;
+      el.onclick=()=>{ if(ev.lat&&ev.lon){ map.setView([ev.lat,ev.lon],15); window.scrollTo({top:document.getElementById('mapWrap').offsetTop-10,behavior:'smooth'}); } };
       dayDiv.appendChild(el);
     });
     cal.appendChild(dayDiv);
   });
+
+  updateMap();
+  const baseUrl=location.href.replace(/index\.html.*$/,'');
+  document.getElementById('htmlCode').value=`<iframe src="${baseUrl}" width="100%" height="600" style="border:0;border-radius:16px" loading="lazy"></iframe>`;
+  const mdList=filteredForEmbed.slice(0,20).map(ev=>`- **${ev._day}** ${ev.title} _${ev.cat||''}_ ${ev.link?`[${ev.link_label||'Link'}](${ev.link})`:''}`).join('\n')||'- Keine Events';
+  document.getElementById('mdCode').value=`### Meißen Kalender (${activeCat})\n${mdList}\n\nQuelle: ${baseUrl}`;
 }
 
 document.querySelectorAll('#filters button').forEach(b=>{
-  b.onclick=()=>{
-    document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active');
-    activeCat=b.dataset.cat;
-    render();
-  };
+  b.onclick=()=>{ document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); activeCat=b.dataset.cat; render(); };
 });
-
 load();
 </script>
 </body>
