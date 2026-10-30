@@ -31,5 +31,14 @@
     "title": "Töpfermarkt",
     "place": "Markt · Elbstraße · Heinrichsplatz · Kleinmarkt",
     "desc": "Keramik"
+  }, 
+  {
+    "date": "2027-05-ß0",
+    "date_end": "2027-05-09",
+    "time": "10:00–18:00",
+    "cat": "Markt",
+    "title": "Kunstfest Meißen",
+    "place": "Johanneskirche Meissen",
+    "desc": "Galerien, Ausstellungen, Darbietungen"
   }
 ]
