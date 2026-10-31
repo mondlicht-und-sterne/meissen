@@ -50,7 +50,7 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Link-Text<input id="link_label" placeholder="Mehr Infos"></label>
   <button type="submit" class="btn">JSON erzeugen</button>
 </form>
-<div id="output"><code id="json"></code><div style="display:flex;gap:8px"><button class="btn2 primary" id="copyBtn">📋 Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">Github Issue öffnen</a></div></div>
+<div id="output"><code id="json"></code><div style="display:flex;gap:8px"><button class="btn2 primary" id="copyBtn">Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a></div><div id="copyHint" style="display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:#f0ece1;color:#111;font-weight:700;font-size:14px;">✅ Kopiert! Sende mir das Kopierte genauso zu.</div></div>
 
 <script>
 const REPO="mondlicht-und-sterne/meissen";
@@ -119,13 +119,18 @@ document.getElementById('f').addEventListener('submit', e=>{
   lastText=JSON.stringify(ev,null,2)+',';
   document.getElementById('json').textContent=lastText;
   document.getElementById('output').style.display='block';
+  document.getElementById('copyHint').style.display='none';
   const titleStr=ev.dateTo?`Event: ${ev.title} ${ev.date} bis ${ev.dateTo}`:`Event: ${ev.title} am ${ev.date}`;
   const b=encodeURIComponent(`**${titleStr}**\nKategorie: ${ev.cat}\nOrt: ${ev.place||''}\nCoords: ${ev.lat||''},${ev.lon||''}\n\n\`\`\`json\n${JSON.stringify(ev,null,2)}\n\`\`\``);
   const url=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(titleStr)}&body=${b}&labels=event-vorschlag`;
   document.getElementById('githubBtn').href=url;
   window.scrollTo({top:9999,behavior:'smooth'});
 });
-document.getElementById('copyBtn').onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{copyBtn.textContent='✅ Kopiert'; setTimeout(()=>copyBtn.textContent='📋 Kopieren',1500);});
+document.getElementById('copyBtn').onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{
+  copyBtn.textContent='✅ Kopiert';
+  document.getElementById('copyHint').style.display='block';
+  setTimeout(()=>{copyBtn.textContent='📋 Kopieren';},2000);
+});
 </script>
 </body>
 </html>
