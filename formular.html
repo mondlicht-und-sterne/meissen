@@ -41,8 +41,8 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Adresse<input id="place" placeholder="Burgstraße 28, 01662 Meissen"></label>
   <div class="row"><label>Lat<input id="lat" type="number" step="any" placeholder="51.1613680"></label><label>Lon<input id="lon" type="number" step="any" placeholder="13.4716919"></label></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button type="button" class="btn2" id="geoBtn">📍 Koordinaten aus Ort holen</button>
-    <button type="button" class="btn2" id="mapBtn">🗺️ Auf Karte zeigen</button>
+    <button type="button" class="btn2" id="geoBtn">Koordinaten aus Ort holen</button>
+    <button type="button" class="btn2" id="mapBtn">Auf Karte zeigen</button>
   </div>
   <div id="mapWrap"><div id="map"></div></div>
   <label>Beschreibung<textarea id="desc" placeholder="Worum geht es?"></textarea></label>
@@ -50,7 +50,7 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Link-Text<input id="link_label" placeholder="Mehr Infos"></label>
   <button type="submit" class="btn">JSON erzeugen</button>
 </form>
-<div id="output"><code id="json"></code><div style="display:flex;gap:8px"><button class="btn2 primary" id="copyBtn">📋 Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a></div></div>
+<div id="output"><code id="json"></code><div style="display:flex;gap:8px"><button class="btn2 primary" id="copyBtn">📋 Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">Github Issue öffnen</a></div></div>
 
 <script>
 const REPO="mondlicht-und-sterne/meissen";
