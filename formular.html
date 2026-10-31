@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Event vorschlagen - Meißen Kalender</title>
+<title>Event vorschlagen - Meissen Kalender</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -34,18 +34,18 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
 <h1>Event vorschlagen</h1>
 <div class="sub">Mit Karte, Mehrtage-Support und direktem GitHub Issue</div>
 <form id="f">
-  <label>Titel *<input id="title" required placeholder="Spieleabend bei Mondlicht"></label>
+  <label>Titel *<input id="title" required placeholder="Wie das Event heisst"></label>
   <div class="row"><label>Start Datum *<input id="dateFrom" type="date" required></label><label>End Datum (optional)<input id="dateTo" type="date"></label></div>
   <label class="check"><input type="checkbox" id="multiCheck"> Mehrtägiges Event (bis Datum nutzen)</label>
   <div class="row"><label>Uhrzeit<input id="time" placeholder="19:00 / täglich 10-18 Uhr"></label><label>Kategorie<select id="cat"><option value="Verein">Verein</option><option value="Spieleabend">Spieleabend</option><option value="Markt">Markt</option><option value="Andere">Andere</option></select><span id="catPreview"></span></label></div>
-  <label>Ort<input id="place" placeholder="Burgstraße 28, 01662 Meißen"></label>
+  <label>Adresse<input id="place" placeholder="Burgstraße 28, 01662 Meissen"></label>
   <div class="row"><label>Lat<input id="lat" type="number" step="any" placeholder="51.1613680"></label><label>Lon<input id="lon" type="number" step="any" placeholder="13.4716919"></label></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
     <button type="button" class="btn2" id="geoBtn">📍 Koordinaten aus Ort holen</button>
     <button type="button" class="btn2" id="mapBtn">🗺️ Auf Karte zeigen</button>
   </div>
   <div id="mapWrap"><div id="map"></div></div>
-  <label>Beschreibung<textarea id="desc" placeholder="Worum geht's?"></textarea></label>
+  <label>Beschreibung<textarea id="desc" placeholder="Worum geht es?"></textarea></label>
   <label>Weblink<input id="link" placeholder="https://..."></label>
   <label>Link-Text<input id="link_label" placeholder="Mehr Infos"></label>
   <button type="submit" class="btn">JSON erzeugen + GitHub Issue öffnen</button>
