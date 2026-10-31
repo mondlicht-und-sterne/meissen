@@ -8,7 +8,7 @@
 <style>
 :root{
 --bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;
---c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-andere:#34d399;
+--c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-repair:#f87171;--c-andere:#34d399;
 }
 body{font-family:system-ui,sans-serif;margin:0;background:var(--bg);color:var(--text);padding:20px 16px 80px}
 h1{max-width:720px;margin:0 auto 8px} .sub{max-width:720px;margin:0 auto 16px;color:var(--muted);font-size:14px}
@@ -27,7 +27,7 @@ input,textarea,select{width:100%;padding:11px 12px;border-radius:10px;border:1px
 code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;background:#00000066;padding:12px;border-radius:10px;margin:12px 0}
 .badge{font-size:10px;padding:3px 8px;border-radius:999px;font-weight:800;display:inline-block}
 .badge.verein{background:var(--c-verein);color:#111} .badge.spiele{background:var(--c-spiele);color:#111}
-.badge.markt{background:var(--c-markt);color:#111} .badge.andere{background:var(--c-andere);color:#111}
+.badge.markt{background:var(--c-markt);color:#111} .badge.repair{background:var(--c-repair);color:#111} .badge.andere{background:var(--c-andere);color:#111}
 </style>
 </head>
 <body>
@@ -37,7 +37,7 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Titel *<input id="title" required placeholder="Wie das Event heisst"></label>
   <div class="row"><label>Start Datum *<input id="dateFrom" type="date" required></label><label>End Datum (optional)<input id="dateTo" type="date"></label></div>
   <label class="check"><input type="checkbox" id="multiCheck"> Mehrtägiges Event (bis Datum nutzen)</label>
-  <div class="row"><label>Uhrzeit<input id="time" placeholder="19:00 / täglich 10-18 Uhr"></label><label>Kategorie<select id="cat"><option value="Verein">Verein</option><option value="Spieleabend">Spieleabend</option><option value="Markt">Markt</option><option value="Andere">Andere</option></select><span id="catPreview"></span></label></div>
+  <div class="row"><label>Uhrzeit<input id="time" placeholder="19:00 / täglich 10-18 Uhr"></label><label>Kategorie<select id="cat"><option value="Verein">Verein</option><option value="Spieleabend">Spieleabend</option><option value="Markt">Markt</option><option value="RepairCafé">RepairCafé</option><option value="Andere">Andere</option></select><span id="catPreview"></span></label></div>
   <label>Adresse<input id="place" placeholder="Burgstraße 28, 01662 Meissen"></label>
   <div class="row"><label>Lat<input id="lat" type="number" step="any" placeholder="51.1613680"></label><label>Lon<input id="lon" type="number" step="any" placeholder="13.4716919"></label></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -72,7 +72,7 @@ function updateMarker(){
   if(!lat||!lon||!map) return;
   if(marker) map.removeLayer(marker);
   const cat=document.getElementById('cat').value;
-  const col=cat==='Verein'?'#60a5fa':cat==='Spieleabend'?'#a78bfa':cat==='Markt'?'#fbbf24':'#34d399';
+  const col=cat==='Verein'?'#60a5fa':cat==='Spieleabend'?'#a78bfa':cat==='Markt'?'#fbbf24':cat==='RepairCafé'?'#f87171':'#34d399';
   marker=L.circleMarker([lat,lon],{radius:10,color:col,fillColor:col,fillOpacity:.9,weight:2}).addTo(map);
   map.setView([lat,lon],15);
 }
@@ -82,7 +82,7 @@ function showMap(){
   setTimeout(()=>{ map.invalidateSize(); updateMarker(); },200);
 }
 function catBadge(cat){
-  const cls=cat==='Verein'?'verein':cat==='Spieleabend'?'spiele':cat==='Markt'?'markt':'andere';
+  const cls=cat==='Verein'?'verein':cat==='Spieleabend'?'spiele':cat==='Markt'?'markt':cat==='RepairCafé'?'repair':'andere';
   return `<span class="badge ${cls}">${cat}</span>`;
 }
 
