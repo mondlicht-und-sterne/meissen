@@ -48,7 +48,7 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Beschreibung<textarea id="desc" placeholder="Worum geht es?"></textarea></label>
   <label>Weblink<input id="link" placeholder="https://..."></label>
   <label>Link-Text<input id="link_label" placeholder="Mehr Infos"></label>
-  <button type="submit" class="btn">JSON erzeugen + GitHub Issue öffnen</button>
+  <button type="submit" class="btn">JSON erzeugen</button>
 </form>
 <div id="output"><code id="json"></code><div style="display:flex;gap:8px"><button class="btn2 primary" id="copyBtn">📋 Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a></div></div>
 
@@ -123,7 +123,6 @@ document.getElementById('f').addEventListener('submit', e=>{
   const b=encodeURIComponent(`**${titleStr}**\nKategorie: ${ev.cat}\nOrt: ${ev.place||''}\nCoords: ${ev.lat||''},${ev.lon||''}\n\n\`\`\`json\n${JSON.stringify(ev,null,2)}\n\`\`\``);
   const url=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(titleStr)}&body=${b}&labels=event-vorschlag`;
   document.getElementById('githubBtn').href=url;
-  window.open(url,'_blank');
   window.scrollTo({top:9999,behavior:'smooth'});
 });
 document.getElementById('copyBtn').onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{copyBtn.textContent='✅ Kopiert'; setTimeout(()=>copyBtn.textContent='📋 Kopieren',1500);});
