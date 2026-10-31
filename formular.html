@@ -21,6 +21,7 @@ input,textarea,select{width:100%;padding:11px 12px;border-radius:10px;border:1px
 .btn{padding:13px;border-radius:999px;border:0;background:var(--text);color:#111;font-weight:900;cursor:pointer;font-size:16px}
 .btn2{padding:9px 14px;border-radius:999px;background:var(--border);color:var(--text);border:1px solid var(--border);cursor:pointer;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .btn2.primary{background:var(--text);color:#111}
+.btn2.signal{background:#3a76f0;color:#fff;border-color:#3a76f0}
 #mapWrap{border-radius:12px;overflow:hidden;border:1px solid var(--border);height:300px;display:none}
 #map{height:100%;width:100%}
 #output{max-width:720px;margin:20px auto;background:#11110f;border:1px dashed var(--border);border-radius:16px;padding:16px;display:none}
@@ -41,8 +42,8 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Adresse<input id="place" placeholder="Burgstraße 28, 01662 Meissen"></label>
   <div class="row"><label>Lat<input id="lat" type="number" step="any" placeholder="51.1613680"></label><label>Lon<input id="lon" type="number" step="any" placeholder="13.4716919"></label></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button type="button" class="btn2" id="geoBtn">Koordinaten aus Ort holen</button>
-    <button type="button" class="btn2" id="mapBtn">Auf Karte zeigen</button>
+    <button type="button" class="btn2" id="geoBtn">📍 Koordinaten aus Ort holen</button>
+    <button type="button" class="btn2" id="mapBtn">🗺️ Auf Karte zeigen</button>
   </div>
   <div id="mapWrap"><div id="map"></div></div>
   <label>Beschreibung<textarea id="desc" placeholder="Worum geht es?"></textarea></label>
@@ -50,7 +51,15 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Link-Text<input id="link_label" placeholder="Mehr Infos"></label>
   <button type="submit" class="btn">JSON erzeugen</button>
 </form>
-<div id="output"><code id="json"></code><div style="display:flex;gap:8px"><button class="btn2 primary" id="copyBtn">Kopieren</button><a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a></div><div id="copyHint" style="display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:#f0ece1;color:#111;font-weight:700;font-size:14px;">Sende mir das Kopierte genauso zu.</div></div>
+<div id="output">
+  <code id="json"></code>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="btn2 primary" id="copyBtn">📋 Kopieren</button>
+    <a class="btn2 signal" id="signalBtn" href="https://signal.me/#eu/1HuAo2wadP9Ii6CCVyYyRcL6JNvyuOPwoQZUBJulc9ZNiZltK49MopVfdaNoYL2U" target="_blank">💬 Per Signal senden</a>
+    <a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a>
+  </div>
+  <div id="copyHint" style="display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:#f0ece1;color:#111;font-weight:700;font-size:14px;">✅ Kopiert! Sende mir das Kopierte genauso per Signal zu.</div>
+</div>
 
 <script>
 const REPO="mondlicht-und-sterne/meissen";
@@ -85,13 +94,11 @@ function catBadge(cat){
   const cls=cat==='Verein'?'verein':cat==='Spieleabend'?'spiele':cat==='Markt'?'markt':cat==='RepairCafé'?'repair':'andere';
   return `<span class="badge ${cls}">${cat}</span>`;
 }
-
 document.getElementById('cat').addEventListener('change', e=>{
   document.getElementById('catPreview').innerHTML=catBadge(e.target.value);
   updateMarker();
 });
 document.getElementById('catPreview').innerHTML=catBadge('Verein');
-
 document.getElementById('geoBtn').onclick=()=>{
   const q=document.getElementById('place').value; if(!q) return alert('Ort eingeben');
   fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`)
