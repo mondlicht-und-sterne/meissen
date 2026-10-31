@@ -8,12 +8,24 @@
     "desc": "Poker, Skat oder Rommé · Eintritt frei · Spiele sind da",
     "link": "https://meissen-kaffeeklappe.de",
     "link_label": "Kaffeeklappe",
-    "lat": 51.1638256,
-    "lon": 13.4702272
+    "lat": 51.160901,
+    "lon": 13.483117
   },
   {
     "date": "2026-11-04",
     "time": "18:00–22:00",
+    "cat": "RepairCafé",
+    "title": "RepairCafé Meissen",
+    "place": "Ein Haus für Vieles e.V., Dresdner Straße 13, 01662 Meissen",
+    "desc": "gemeinsam reparieren was zum Wegwerfen zu Schade ist. Dieses Angebot ist nur mit vorheriger Anmeldung möglich",
+    "link": "https://einhausfuervieles.de/reparatur-cafe/",
+    "link_label": "einhausfuervieles.de",
+    "lat": 51.160901,
+    "lon": 13.4716919
+  },
+  {
+    "date": "2026-11-01",
+    "time": "16:00",
     "cat": "Verein",
     "title": "Zukunftskino - Everything will change",
     "place": "GEPARD e.V., Neugasse 5, 01662 Meissen",
