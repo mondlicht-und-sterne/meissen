@@ -2,28 +2,14 @@
 <html lang="de">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Meissen Kalender</title>
+<title>Kalender Meißen</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 :root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;--c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-repair:#f87171;--c-andere:#34d399}
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:0 16px 50px}
-header{
-  position:sticky;
-  top:0;
-  z-index:999;
-  background:var(--bg);
-  max-width:900px;
-  margin:0 auto 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  padding:14px 0 12px;
-  border-bottom:1px solid var(--border);
-}
+header{position:sticky;top:0;z-index:999;background:var(--bg);max-width:900px;margin:0 auto 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 0 12px;border-bottom:1px solid var(--border);}
 h1{margin:0;font-size:24px} .sub{color:var(--muted);font-size:13px;margin-top:4px}
 a.btn{padding:10px 16px;border-radius:999px;background:#11110f;color:var(--text);border:1px solid var(--border);text-decoration:none;font-weight:900;font-size:13px}
 #filters{max-width:900px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:62px;z-index:998;background:var(--bg);padding:8px 0}
@@ -40,46 +26,6 @@ a.btn{padding:10px 16px;border-radius:999px;background:#11110f;color:var(--text)
 #filters button[data-cat="RepairCafé"].active{background:var(--c-repair) !important;color:#111 !important}
 #filters button[data-cat="Andere"].active{background:var(--c-andere) !important;color:#111 !important}
 #mapWrap{max-width:900px;width:92%;margin:0 auto 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
-#map{height:280<!doctype html>
-<html lang="de">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kalender Meißen</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<style>
-:root{--bg:#1e1c18;--card:#2a2824;--text:#f0ece1;--muted:#a8a29a;--border:#3a3732;--c-verein:#60a5fa;--c-spiele:#a78bfa;--c-markt:#fbbf24;--c-andere:#34d399}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);padding:0 16px 50px}
-header{ Steffen Preiß
-  position:sticky;
-  top:0;
-  z-index:999;
-  background:var(--bg);
-  max-width:900px;
-  margin:0 auto 16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-  padding:14px 0 12px;
-  border-bottom:1px solid var(--border);
-}
-h1{margin:0;font-size:24px} .sub{color:var(--muted);font-size:13px;margin-top:4px}
-a.btn{padding:10px 16px;border-radius:999px;background:#11110f;color:var(--text);border:1px solid var(--border);text-decoration:none;font-weight:900;font-size:13px}
-#filters{max-width:900px;margin:0 auto 12px;display:flex;gap:8px;flex-wrap:wrap;position:sticky;top:62px;z-index:998;background:var(--bg);padding:8px 0}
-#filters button{padding:7px 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13px;font-weight:700;color:var(--muted)}
-#filters button[data-cat="Verein"]{color:var(--c-verein)}
-#filters button[data-cat="Spieleabend"]{color:var(--c-spiele)}
-#filters button[data-cat="Markt"]{color:var(--c-markt)}
-#filters button[data-cat="Andere"]{color:var(--c-andere)}
-#filters button.active{color:#111 !important;background:var(--text) !important;border-color:var(--text) !important}
-#filters button[data-cat="Verein"].active{background:var(--c-verein) !important;color:#111 !important}
-#filters button[data-cat="Spieleabend"].active{background:var(--c-spiele) !important;color:#111 !important}
-#filters button[data-cat="Markt"].active{background:var(--c-markt) !important;color:#111 !important}
-#filters button[data-cat="Andere"].active{background:var(--c-andere) !important;color:#111 !important}
-#mapWrap{max-width:900px;width:92%;margin:0 auto 16px;border-radius:16px;overflow:hidden;border:1px solid var(--border)}
 #map{height:280px;width:100%}
 @media(min-width:1000px){ #mapWrap{width:100%} #map{height:320px} }
 #calendar{max-width:900px;margin:0 auto;display:grid;gap:12px}
@@ -90,127 +36,8 @@ a.btn{padding:10px 16px;border-radius:999px;background:#11110f;color:var(--text)
 .event.cat-Verein{border-left-color:var(--c-verein);background:#60a5fa18}
 .event.cat-Spieleabend{border-left-color:var(--c-spiele);background:#a78bfa18}
 .event.cat-Markt{border-left-color:var(--c-markt);background:#fbbf2418}
-.event.cat-Andere{border-left-color:var(--c-andere);background:#34d39918}
-.eventTitle{font-weight:800;font-size:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.badge{font-size:10px;padding:3px 8px;border-radius:999px;font-weight:800}
-.badge.verein{background:var(--c-verein);color:#111} .badge.spiele{background:var(--c-spiele);color:#111}
-.badge.markt{background:var(--c-markt);color:#111} .badge.andere{background:var(--c-andere);color:#111}
-.badge.multiBadge{background:var(--text);color:#111}
-.eventMeta{font-size:12px;color:var(--muted);margin-top:2px}
-a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:600}
-#forOthers{max-width:900px;width:92%;margin:28px auto 0;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px}
-@media(min-width:1000px){ #forOthers{width:100%} }
-#forOthers h2{margin:0 0 4px;font-size:18px} #forOthers p{color:var(--muted);font-size:13px;margin:0 0 16px}
-#forOthers label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px;display:grid;gap:6px;margin-top:14px}
-#forOthers textarea{width:100%;background:#11110f;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:10px;font-size:12px;font-family:monospace;min-height:90px}
-.previewBox{margin-top:8px;background:#11110f;border:1px solid var(--border);border-radius:10px;padding:10px}
-</style>
-</head>
-<body>
-<header>
-  <div><h1>Meissen Kalender</h1><div class="sub">von mondstern</div></div>
-  <a class="btn" href="formular.html" target="_blank" rel="noopener">+ Event vorschlagen</a>
-</header>
-<div id="filters">
-  <button data-cat="all" class="active">Alle</button>
-  <button data-cat="Verein">Verein</button>
-  <button data-cat="Spieleabend">Spieleabend</button>
-  <button data-cat="Markt">Markt</button>
-  <button data-cat="RepairCafé">RepairCafé</button>
-  <button data-cat="Andere">Andere</button>
-</div>
-<div id="mapWrap"><div id="map"></div></div>
-<div id="calendar">Lade events.json...</div>
-
-<div id="forOthers">
-  <h2>Meissen Kalender für Deine Webseite</h2>
-  
-  <label>Vorschau<div class="previewBox" id="badgePreview"></div></label>
-  <label>1. Shields.io Badge URL<textarea id="shieldsCode" readonly></textarea></label>
-  <label>2. HTML Link<textarea id="htmlCode" readonly></textarea></label>
-  <label>3. Markdown Link<textarea id="mdCode" readonly></textarea></label>
-</div>
-
-<script>
-let allEvents=[]; let activeCat='all'; let map; let markers=[];
-function parseLocal(s){ if(!s) return null; const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
-function toLocalStr(dt){ const y=dt.getFullYear(); const m=String(dt.getMonth()+1).padStart(2,'0'); const d=String(dt.getDate()).padStart(2,'0'); return `${y}-${m}-${d}`; }
-function isOnDay(ev, dayStr){ const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date; if(!s) return false; return dayStr>=s && dayStr<=e; }
-function formatLabel(ev){ const e=ev.endDate||ev.dateTo; if(e&&e!==ev.date) return `${ev.date} → ${e}`; return ev.date||ev.startDate; }
-function isMulti(ev){ const e=ev.endDate||ev.dateTo; return e&&e!==ev.date; }
-const catClass=c=> c==='Verein'?'Verein':c==='Spieleabend'?'Spieleabend':c==='Markt'?'Markt':'Andere';
-const badgeClass=c=> c==='Verein'?'verein':c==='Spieleabend'?'spiele':c==='Markt'?'markt':'andere';
-const catColor=c=> c==='Verein'?'#60a5fa':c==='Spieleabend'?'#a78bfa':c==='Markt'?'#fbbf24':'#34d399';
-function initMap(){ map=L.map('map').setView([51.163,13.47],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }
-function updateMap(){
-  markers.forEach(m=>map.removeLayer(m)); markers=[];
-  allEvents.filter(e=>activeCat==='all'||e.cat===activeCat).filter(e=>e.lat&&e.lon).forEach(ev=>{
-    const m=L.circleMarker([ev.lat,ev.lon],{radius:9,color:catColor(ev.cat),fillColor:catColor(ev.cat),fillOpacity:.9,weight:2}).addTo(map);
-    m.bindPopup(`<b>${ev.title}</b><br>${formatLabel(ev)} ${ev.time||''}<br>${ev.place||''}`);
-    markers.push(m);
-  });
-  if(markers.length){ map.fitBounds(L.featureGroup(markers).getBounds().pad(0.3)); }
-}
-async function load(){ initMap(); try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt'; return; } render(); }
-
-function render(){
-  const cal=document.getElementById('calendar'); cal.innerHTML='';
-  const allFiltered = allEvents.filter(e=>activeCat==='all'||e.cat===activeCat);
-  const daysSet=new Set();
-  allFiltered.forEach(ev=>{
-    const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date;
-    if(!s) return;
-    let d=parseLocal(s); let endD=parseLocal(e||s);
-    if(!d||!endD) return;
-    for(let cur=new Date(d); cur<=endD; cur.setDate(cur.getDate()+1)){
-      daysSet.add(toLocalStr(cur));
-      if(daysSet.size>150) break;
-    }
-  });
-  const days=[...daysSet].sort();
-  days.forEach(dayStr=>{
-    const evs=allFiltered.filter(e=>isOnDay(e,dayStr));
-    if(!evs.length) return;
-    const dayDiv=document.createElement('div'); dayDiv.className='day';
-    const d=parseLocal(dayStr);
-    dayDiv.innerHTML=`<div class="dayHeader"><div class="dayDate">${d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}</div><div class="dayWeekday">${d.toLocaleDateString('de-DE',{weekday:'long'})}</div></div>`;
-    evs.forEach(ev=>{
-      const cc=catClass(ev.cat); const bc=badgeClass(ev.cat);
-      const el=document.createElement('div'); el.className='event cat-'+cc;
-      el.innerHTML=`<div class="eventTitle">${ev.title} <span class="badge ${bc}">${ev.cat||'Andere'}</span> ${isMulti(ev)?`<span class="badge multiBadge">${formatLabel(ev)}</span>`:''}</div><div class="eventMeta">${ev.time||''} ${ev.place?'· '+ev.place:''}</div>${ev.link?`<a class="link" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos →'}</a>`:''}`;
-      el.onclick=()=>{ if(ev.lat&&ev.lon){ map.setView([ev.lat,ev.lon],15); window.scrollTo({top:document.getElementById('mapWrap').offsetTop-10,behavior:'smooth'}); } };
-      dayDiv.appendChild(el);
-    });
-    cal.appendChild(dayDiv);
-  });
-  updateMap();
-  const baseUrl = "https://mondlicht-und-sterne.github.io/meissen/";
-  const currentUrl = activeCat !== 'all' ? `${baseUrl}?cat=${activeCat}` : baseUrl;
-  const labelRaw = activeCat !== 'all' ? `Meissen ${activeCat} Kalender` : `Meissen Kalender`;
-  const badgeUrl = `https://img.shields.io/badge/Meissen-Kalender-2ea44f?style=for-the-badge&logo=calendar&logoColor=white`;
-  const shieldsMarkdown = `[![${labelRaw}](${badgeUrl})](${currentUrl})`;
-  const htmlLink = `<a href="${currentUrl}" target="_blank" rel="noopener">\n  <img src="${badgeUrl}" alt="${labelRaw}">\n</a>`;
-  const mdLink = `[${labelRaw}](${currentUrl})\n\n${shieldsMarkdown}`;
-  document.getElementById('badgePreview').innerHTML = `<a href="${currentUrl}" target="_blank"><img src="${badgeUrl}" alt="${labelRaw}"></a>`;
-  document.getElementById('shieldsCode').value = badgeUrl;
-  document.getElementById('htmlCode').value = htmlLink;
-  document.getElementById('mdCode').value = mdLink;
-}
-document.querySelectorAll('#filters button').forEach(b=>{ b.onclick=()=>{ document.querySelectorAll('#filters button').forEach(x=>x.classList.remove('active')); b.classList.add('active'); activeCat=b.dataset.cat; render(); }; });
-load();
-</script>
-</body>
-</html>px;width:100%}
-@media(min-width:1000px){ #mapWrap{width:100%} #map{height:320px} }
-#calendar{max-width:900px;margin:0 auto;display:grid;gap:12px}
-.day{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px}
-.dayHeader{display:flex;justify-content:space-between;margin-bottom:10px}
-.dayDate{font-weight:900} .dayWeekday{color:var(--muted);font-size:12px}
-.event{border-left:4px solid var(--border);padding:8px 10px;margin:8px 0;background:#11110f;border-radius:10px;cursor:pointer}
-.event.cat-Verein{border-left-color:var(--c-verein);background:#60a5fa18}
-.event.cat-Spieleabend{border-left-color:var(--c-spiele);background:#a78bfa18}
-.event.cat-Markt{border-left-color:var(--c-markt);background:#fbbf2418}
 .event.cat-RepairCafé{border-left-color:var(--c-repair);background:#f8717118}
+.event.cat-RepairCafe{border-left-color:var(--c-repair);background:#f8717118}
 .event.cat-Andere{border-left-color:var(--c-andere);background:#34d39918}
 .eventTitle{font-weight:800;font-size:14px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .badge{font-size:10px;padding:3px 8px;border-radius:999px;font-weight:800}
@@ -244,8 +71,8 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 <div id="calendar">Lade events.json...</div>
 
 <div id="forOthers">
-  <h2>Meissen Kalender für Deine Webseite</h2>
-  
+  <h2>Meißen Kalender für Andere Webseiten</h2>
+  <p>Sticky Header + Badge grau Meissen / grün Kalender</p>
   <label>Vorschau<div class="previewBox" id="badgePreview"></div></label>
   <label>1. Shields.io Badge URL<textarea id="shieldsCode" readonly></textarea></label>
   <label>2. HTML Link<textarea id="htmlCode" readonly></textarea></label>
@@ -254,29 +81,33 @@ a.link{color:var(--text);text-decoration:underline;font-size:12px;font-weight:60
 
 <script>
 let allEvents=[]; let activeCat='all'; let map; let markers=[];
+function normCat(c){ if(!c) return 'Andere'; c=c.trim(); const low=c.toLowerCase(); if(low.includes('repair')) return 'RepairCafé'; if(low==='verein') return 'Verein'; if(low==='spieleabend') return 'Spieleabend'; if(low==='markt') return 'Markt'; return c; }
 function parseLocal(s){ if(!s) return null; const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); }
 function toLocalStr(dt){ const y=dt.getFullYear(); const m=String(dt.getMonth()+1).padStart(2,'0'); const d=String(dt.getDate()).padStart(2,'0'); return `${y}-${m}-${d}`; }
 function isOnDay(ev, dayStr){ const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date; if(!s) return false; return dayStr>=s && dayStr<=e; }
 function formatLabel(ev){ const e=ev.endDate||ev.dateTo; if(e&&e!==ev.date) return `${ev.date} → ${e}`; return ev.date||ev.startDate; }
 function isMulti(ev){ const e=ev.endDate||ev.dateTo; return e&&e!==ev.date; }
-const catClass=c=> c==='Verein'?'Verein':c==='Spieleabend'?'Spieleabend':c==='Markt'?'Markt':c==='RepairCafé'?'RepairCafé':'Andere';
-const badgeClass=c=> c==='Verein'?'verein':c==='Spieleabend'?'spiele':c==='Markt'?'markt':c==='RepairCafé'?'repair':'andere';
-const catColor=c=> c==='Verein'?'#60a5fa':c==='Spieleabend'?'#a78bfa':c==='Markt'?'#fbbf24':c==='RepairCafé'?'#f87171':'#34d399';
-function initMap(){ map=L.map('map').setView([51.163,13.47],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }
+const catClass=c=>{ c=normCat(c); if(c==='Verein') return 'Verein'; if(c==='Spieleabend') return 'Spieleabend'; if(c==='Markt') return 'Markt'; if(c==='RepairCafé') return 'RepairCafé'; return 'Andere'; };
+const badgeClass=c=>{ c=normCat(c); if(c==='Verein') return 'verein'; if(c==='Spieleabend') return 'spiele'; if(c==='Markt') return 'markt'; if(c==='RepairCafé') return 'repair'; return 'andere'; };
+const catColor=c=>{ c=normCat(c); if(c==='Verein') return '#60a5fa'; if(c==='Spieleabend') return '#a78bfa'; if(c==='Markt') return '#fbbf24'; if(c==='RepairCafé') return '#f87171'; return '#34d399'; };
+function initMap(){ try{ map=L.map('map').setView([51.163,13.47],13); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM'}).addTo(map); }catch(e){} }
 function updateMap(){
-  markers.forEach(m=>map.removeLayer(m)); markers=[];
-  allEvents.filter(e=>activeCat==='all'||e.cat===activeCat).filter(e=>e.lat&&e.lon).forEach(ev=>{
-    const m=L.circleMarker([ev.lat,ev.lon],{radius:9,color:catColor(ev.cat),fillColor:catColor(ev.cat),fillOpacity:.9,weight:2}).addTo(map);
-    m.bindPopup(`<b>${ev.title}</b><br>${formatLabel(ev)} ${ev.time||''}<br>${ev.place||''}`);
-    markers.push(m);
+  if(!map) return;
+  markers.forEach(m=>{ try{map.removeLayer(m)}catch(e){} }); markers=[];
+  allEvents.filter(e=>activeCat==='all'||normCat(e.cat)===activeCat).filter(e=>e.lat&&e.lon).forEach(ev=>{
+    try{
+      const m=L.circleMarker([ev.lat,ev.lon],{radius:9,color:catColor(ev.cat),fillColor:catColor(ev.cat),fillOpacity:.9,weight:2}).addTo(map);
+      m.bindPopup(`<b>${ev.title}</b><br>${formatLabel(ev)} ${ev.time||''}<br>${ev.place||''}`);
+      markers.push(m);
+    }catch(e){}
   });
-  if(markers.length){ map.fitBounds(L.featureGroup(markers).getBounds().pad(0.3)); }
+  if(markers.length){ try{ map.fitBounds(L.featureGroup(markers).getBounds().pad(0.3)); }catch(e){} }
 }
-async function load(){ initMap(); try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt'; return; } render(); }
+async function load(){ initMap(); try{ const r=await fetch('events.json?'+Date.now()); allEvents=await r.json(); allEvents.forEach(ev=>ev.cat=normCat(ev.cat)); }catch(e){ document.getElementById('calendar').textContent='events.json fehlt: '+e; return; } render(); }
 
 function render(){
   const cal=document.getElementById('calendar'); cal.innerHTML='';
-  const allFiltered = allEvents.filter(e=>activeCat==='all'||e.cat===activeCat);
+  const allFiltered = allEvents.filter(e=>activeCat==='all'||normCat(e.cat)===activeCat);
   const daysSet=new Set();
   allFiltered.forEach(ev=>{
     const s=ev.startDate||ev.date; const e=ev.endDate||ev.dateTo||ev.date;
@@ -289,6 +120,7 @@ function render(){
     }
   });
   const days=[...daysSet].sort();
+  if(!days.length){ cal.innerHTML='<div style="color:var(--muted);text-align:center;padding:20px">Keine Events für diesen Filter</div>'; updateMap(); return; }
   days.forEach(dayStr=>{
     const evs=allFiltered.filter(e=>isOnDay(e,dayStr));
     if(!evs.length) return;
@@ -299,7 +131,7 @@ function render(){
       const cc=catClass(ev.cat); const bc=badgeClass(ev.cat);
       const el=document.createElement('div'); el.className='event cat-'+cc;
       el.innerHTML=`<div class="eventTitle">${ev.title} <span class="badge ${bc}">${ev.cat||'Andere'}</span> ${isMulti(ev)?`<span class="badge multiBadge">${formatLabel(ev)}</span>`:''}</div><div class="eventMeta">${ev.time||''} ${ev.place?'· '+ev.place:''}</div>${ev.link?`<a class="link" href="${ev.link}" target="_blank">${ev.link_label||'Mehr Infos →'}</a>`:''}`;
-      el.onclick=()=>{ if(ev.lat&&ev.lon){ map.setView([ev.lat,ev.lon],15); window.scrollTo({top:document.getElementById('mapWrap').offsetTop-10,behavior:'smooth'}); } };
+      el.onclick=()=>{ if(ev.lat&&ev.lon&&map){ map.setView([ev.lat,ev.lon],15); window.scrollTo({top:document.getElementById('mapWrap').offsetTop-10,behavior:'smooth'}); } };
       dayDiv.appendChild(el);
     });
     cal.appendChild(dayDiv);
