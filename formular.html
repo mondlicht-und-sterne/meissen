@@ -42,8 +42,8 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
   <label>Adresse<input id="place" placeholder="Burgstraße 28, 01662 Meissen"></label>
   <div class="row"><label>Lat<input id="lat" type="number" step="any" placeholder="51.1613680"></label><label>Lon<input id="lon" type="number" step="any" placeholder="13.4716919"></label></div>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button type="button" class="btn2" id="geoBtn">📍 Koordinaten aus Ort holen</button>
-    <button type="button" class="btn2" id="mapBtn">🗺️ Auf Karte zeigen</button>
+    <button type="button" class="btn2" id="geoBtn">Koordinaten aus Ort holen</button>
+    <button type="button" class="btn2" id="mapBtn">Auf Karte zeigen</button>
   </div>
   <div id="mapWrap"><div id="map"></div></div>
   <label>Beschreibung<textarea id="desc" placeholder="Worum geht es?"></textarea></label>
@@ -54,17 +54,15 @@ code{white-space:pre-wrap;word-break:break-all;font-size:12px;display:block;back
 <div id="output">
   <code id="json"></code>
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn2 primary" id="copyBtn">📋 Kopieren</button>
+    <button class="btn2 primary" id="copyBtn">Kopieren</button>
     <a class="btn2 signal" id="signalBtn" href="https://signal.me/#eu/1HuAo2wadP9Ii6CCVyYyRcL6JNvyuOPwoQZUBJulc9ZNiZltK49MopVfdaNoYL2U" target="_blank">💬 Per Signal senden</a>
-    <a class="btn2 primary" id="githubBtn" target="_blank">🐙 Issue öffnen</a>
+    <a class="btn2 primary" id="githubBtn" target="_blank">Github Issue öffnen</a>
   </div>
-  <div id="copyHint" style="display:none;margin-top:12px;padding:10px 12px;border-radius:10px;background:#f0ece1;color:#111;font-weight:700;font-size:14px;">✅ Kopiert! Sende mir das Kopierte genauso per Signal zu.</div>
 </div>
 
 <script>
 const REPO="mondlicht-und-sterne/meissen";
 let map, marker;
-
 function initMap(){
   if(map) return;
   map=L.map('map').setView([51.163,13.47],13);
@@ -115,7 +113,6 @@ document.getElementById('mapBtn').onclick=()=>{
   showMap();
 };
 ['lat','lon'].forEach(id=>document.getElementById(id).addEventListener('change',()=>{ if(document.getElementById('mapWrap').style.display==='block') updateMarker(); }));
-
 let lastText="";
 document.getElementById('f').addEventListener('submit', e=>{
   e.preventDefault();
@@ -126,7 +123,6 @@ document.getElementById('f').addEventListener('submit', e=>{
   lastText=JSON.stringify(ev,null,2)+',';
   document.getElementById('json').textContent=lastText;
   document.getElementById('output').style.display='block';
-  document.getElementById('copyHint').style.display='none';
   const titleStr=ev.dateTo?`Event: ${ev.title} ${ev.date} bis ${ev.dateTo}`:`Event: ${ev.title} am ${ev.date}`;
   const b=encodeURIComponent(`**${titleStr}**\nKategorie: ${ev.cat}\nOrt: ${ev.place||''}\nCoords: ${ev.lat||''},${ev.lon||''}\n\n\`\`\`json\n${JSON.stringify(ev,null,2)}\n\`\`\``);
   const url=`https://github.com/${REPO}/issues/new?title=${encodeURIComponent(titleStr)}&body=${b}&labels=event-vorschlag`;
@@ -135,8 +131,7 @@ document.getElementById('f').addEventListener('submit', e=>{
 });
 document.getElementById('copyBtn').onclick=()=>navigator.clipboard.writeText(lastText).then(()=>{
   copyBtn.textContent='✅ Kopiert';
-  document.getElementById('copyHint').style.display='block';
-  setTimeout(()=>{copyBtn.textContent='📋 Kopieren';},2000);
+  setTimeout(()=>{copyBtn.textContent='📋 Kopieren';},1500);
 });
 </script>
 </body>
